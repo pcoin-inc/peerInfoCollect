@@ -27,7 +27,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common/math"
+	"peerInfoCollect/common/math"
 )
 
 type testEncoder struct {

@@ -17,12 +17,8 @@
 package keystore
 
 import (
-	"math/big"
-
-	"github.com/ethereum/go-ethereum"
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
+	"peerInfoCollect/accounts"
+	"peerInfoCollect/crypto"
 )
 
 // keystoreWallet implements the accounts.Wallet interface for the original
@@ -75,10 +71,10 @@ func (w *keystoreWallet) Derive(path accounts.DerivationPath, pin bool) (account
 	return accounts.Account{}, accounts.ErrNotSupported
 }
 
-// SelfDerive implements accounts.Wallet, but is a noop for plain wallets since
-// there is no notion of hierarchical account derivation for plain keystore accounts.
-func (w *keystoreWallet) SelfDerive(bases []accounts.DerivationPath, chain ethereum.ChainStateReader) {
-}
+//// SelfDerive implements accounts.Wallet, but is a noop for plain wallets since
+//// there is no notion of hierarchical account derivation for plain keystore accounts.
+//func (w *keystoreWallet) SelfDerive(bases []accounts.DerivationPath, chain ethereum.ChainStateReader) {
+//}
 
 // signHash attempts to sign the given hash with
 // the given account. If the wallet does not wrap this particular account, an
@@ -129,22 +125,22 @@ func (w *keystoreWallet) SignTextWithPassphrase(account accounts.Account, passph
 // with the given account. If the wallet does not wrap this particular account,
 // an error is returned to avoid account leakage (even though in theory we may
 // be able to sign via our shared keystore backend).
-func (w *keystoreWallet) SignTx(account accounts.Account, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) {
-	// Make sure the requested account is contained within
-	if !w.Contains(account) {
-		return nil, accounts.ErrUnknownAccount
-	}
-	// Account seems valid, request the keystore to sign
-	return w.keystore.SignTx(account, tx, chainID)
-}
+//func (w *keystoreWallet) SignTx(account accounts.Account, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) {
+//	// Make sure the requested account is contained within
+//	if !w.Contains(account) {
+//		return nil, accounts.ErrUnknownAccount
+//	}
+//	// Account seems valid, request the keystore to sign
+//	return w.keystore.SignTx(account, tx, chainID)
+//}
 
 // SignTxWithPassphrase implements accounts.Wallet, attempting to sign the given
-// transaction with the given account using passphrase as extra authentication.
-func (w *keystoreWallet) SignTxWithPassphrase(account accounts.Account, passphrase string, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) {
-	// Make sure the requested account is contained within
-	if !w.Contains(account) {
-		return nil, accounts.ErrUnknownAccount
-	}
-	// Account seems valid, request the keystore to sign
-	return w.keystore.SignTxWithPassphrase(account, passphrase, tx, chainID)
-}
+//// transaction with the given account using passphrase as extra authentication.
+//func (w *keystoreWallet) SignTxWithPassphrase(account accounts.Account, passphrase string, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) {
+//	// Make sure the requested account is contained within
+//	if !w.Contains(account) {
+//		return nil, accounts.ErrUnknownAccount
+//	}
+//	// Account seems valid, request the keystore to sign
+//	return w.keystore.SignTxWithPassphrase(account, passphrase, tx, chainID)
+//}

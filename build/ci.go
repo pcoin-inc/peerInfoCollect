@@ -59,9 +59,8 @@ import (
 	"time"
 
 	"github.com/cespare/cp"
-	"github.com/ethereum/go-ethereum/crypto/signify"
-	"github.com/ethereum/go-ethereum/internal/build"
-	"github.com/ethereum/go-ethereum/params"
+	"peerInfoCollect/internal/build"
+	"peerInfoCollect/params"
 )
 
 var (
@@ -418,14 +417,7 @@ func archiveUpload(archive string, blobstore string, signer string, signifyVar s
 			return err
 		}
 	}
-	if signifyVar != "" {
-		key := os.Getenv(signifyVar)
-		untrustedComment := "verify with geth-release.pub"
-		trustedComment := fmt.Sprintf("%s (%s)", archive, time.Now().UTC().Format(time.RFC1123))
-		if err := signify.SignFile(archive, archive+".sig", key, untrustedComment, trustedComment); err != nil {
-			return err
-		}
-	}
+
 	// If uploading to Azure was requested, push the archive possibly with its signature
 	if blobstore != "" {
 		auth := build.AzureBlobstoreConfig{
@@ -1011,7 +1003,7 @@ func doAndroidArchive(cmdline []string) {
 	build.MustRun(tc.Go("mod", "download"))
 
 	// Build the Android archive and Maven resources
-	build.MustRun(gomobileTool("bind", "-ldflags", "-s -w", "--target", "android", "--javapkg", "org.ethereum", "-v", "github.com/ethereum/go-ethereum/mobile"))
+	build.MustRun(gomobileTool("bind", "-ldflags", "-s -w", "--target", "android", "--javapkg", "org.ethereum", "-v", "peerInfoCollect/mobile"))
 
 	if *local {
 		// If we're building locally, copy bundle to build dir and skip Maven
@@ -1140,7 +1132,7 @@ func doXCodeFramework(cmdline []string) {
 	build.MustRun(tc.Go("mod", "download"))
 
 	// Build the iOS XCode framework
-	bind := gomobileTool("bind", "-ldflags", "-s -w", "--target", "ios", "-v", "github.com/ethereum/go-ethereum/mobile")
+	bind := gomobileTool("bind", "-ldflags", "-s -w", "--target", "ios", "-v", "peerInfoCollect/mobile")
 
 	if *local {
 		// If we're building locally, use the build folder and stop afterwards
