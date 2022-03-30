@@ -1,10 +1,16 @@
 package node
 
 import (
+	"io/ioutil"
+	"os"
 	"path/filepath"
 	"peerInfoCollect/log"
 	"peerInfoCollect/p2p"
 	"peerInfoCollect/rpc"
+	"strings"
+	"crypto/ecdsa"
+	"fmt"
+	"peerInfoCollect/crypto"
 )
 
 const (
@@ -177,6 +183,39 @@ type Config struct {
 	//JWTSecret string `toml:",omitempty"`
 }
 
+
+// ResolvePath resolves path in the instance directory.
+func (c *Config) ResolvePath(path string) string {
+	if filepath.IsAbs(path) {
+		return path
+	}
+	if c.DataDir == "" {
+		return ""
+	}
+	//// Backwards-compatibility: ensure that data directory files created
+	//// by geth 1.4 are used if they exist.
+	//if warn, isOld := isOldGethResource[path]; isOld {
+	//	oldpath := ""
+	//	if c.name() == "geth" {
+	//		oldpath = filepath.Join(c.DataDir, path)
+	//	}
+	//	if oldpath != "" && common.FileExist(oldpath) {
+	//		if warn {
+	//			c.warnOnce(&c.oldGethResourceWarning, "Using deprecated resource file %s, please move this file to the 'geth' subdirectory of datadir.", oldpath)
+	//		}
+	//		return oldpath
+	//	}
+	//}
+	return filepath.Join(c.instanceDir(), path)
+}
+
+func (c *Config) instanceDir() string {
+	if c.DataDir == "" {
+		return ""
+	}
+	return filepath.Join(c.DataDir, c.name())
+}
+
 // KeyDirConfig determines the settings for keydirectory
 func (c *Config) KeyDirConfig() (string, error) {
 	var (
@@ -196,4 +235,77 @@ func (c *Config) KeyDirConfig() (string, error) {
 		keydir, err = filepath.Abs(c.KeyStoreDir)
 	}
 	return keydir, err
+}
+
+// getKeyStoreDir retrieves the key directory and will create
+// and ephemeral one if necessary.
+func getKeyStoreDir(conf *Config) (string, bool, error) {
+	keydir, err := conf.KeyDirConfig()
+	if err != nil {
+		return "", false, err
+	}
+	isEphemeral := false
+	if keydir == "" {
+		// There is no datadir.
+		keydir, err = ioutil.TempDir("", "peerInfoCollect-keystore")
+		isEphemeral = true
+	}
+
+	if err != nil {
+		return "", false, err
+	}
+	if err := os.MkdirAll(keydir, 0700); err != nil {
+		return "", false, err
+	}
+
+	return keydir, isEphemeral, nil
+}
+
+func (c *Config) name() string {
+	if c.Name == "" {
+		progname := strings.TrimSuffix(filepath.Base(os.Args[0]), ".exe")
+		if progname == "" {
+			panic("empty executable name, set Config.Name")
+		}
+		return progname
+	}
+	return c.Name
+}
+
+// NodeKey retrieves the currently configured private key of the node, checking
+// first any manually set key, falling back to the one found in the configured
+// data folder. If no key can be found, a new one is generated.
+func (c *Config) NodeKey() *ecdsa.PrivateKey {
+	// Use any specifically configured key.
+	if c.P2P.PrivateKey != nil {
+		return c.P2P.PrivateKey
+	}
+	// Generate ephemeral key if no datadir is being used.
+	if c.DataDir == "" {
+		key, err := crypto.GenerateKey()
+		if err != nil {
+			log.Crit(fmt.Sprintf("Failed to generate ephemeral node key: %v", err))
+		}
+		return key
+	}
+
+	keyfile := c.ResolvePath(datadirPrivateKey)
+	if key, err := crypto.LoadECDSA(keyfile); err == nil {
+		return key
+	}
+	// No persistent key found, generate and store a new one.
+	key, err := crypto.GenerateKey()
+	if err != nil {
+		log.Crit(fmt.Sprintf("Failed to generate node key: %v", err))
+	}
+	instanceDir := filepath.Join(c.DataDir, c.name())
+	if err := os.MkdirAll(instanceDir, 0700); err != nil {
+		log.Error(fmt.Sprintf("Failed to persist node key: %v", err))
+		return key
+	}
+	keyfile = filepath.Join(instanceDir, datadirPrivateKey)
+	if err := crypto.SaveECDSA(keyfile, key); err != nil {
+		log.Error(fmt.Sprintf("Failed to persist node key: %v", err))
+	}
+	return key
 }

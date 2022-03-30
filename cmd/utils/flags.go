@@ -2,15 +2,23 @@ package utils
 
 import (
 	"crypto/ecdsa"
-	"gopkg.in/urfave/cli.v1"
-	"io/ioutil"
-	"peerInfoCollect/crypto"
-	"peerInfoCollect/node"
-	"peerInfoCollect/p2p/nat"
-	"peerInfoCollect/p2p/netutil"
-	"peerInfoCollect/p2p"
-	"strings"
 	"fmt"
+	"peerInfoCollect/core"
+	"gopkg.in/urfave/cli.v1"
+	"peerInfoCollect/common"
+	"io/ioutil"
+	"math"
+	"peerInfoCollect/crypto"
+	"peerInfoCollect/eth/ethconfig"
+	"peerInfoCollect/node"
+	"peerInfoCollect/p2p"
+	"peerInfoCollect/p2p/nat"
+	"peerInfoCollect/params"
+	"peerInfoCollect/p2p/netutil"
+	"strings"
+	godebug "runtime/debug"
+	"peerInfoCollect/log"
+	gopsutil "github.com/shirou/gopsutil/mem"
 )
 
 var (
@@ -30,6 +38,11 @@ var (
 		Usage: "Explicitly set network id (integer)(For testnets: use --ropsten, --rinkeby, --goerli instead)",
 		//TODO network id should be changed by config
 		Value: 1,
+	}
+
+	MainnetFlag = cli.BoolFlag{
+		Name:  "mainnet",
+		Usage: "Ethereum mainnet",
 	}
 
 	IdentityFlag = cli.StringFlag{
@@ -116,6 +129,12 @@ var (
 		Name:  "authrpc.vhosts",
 		Usage: "Comma separated list of virtual hostnames from which to accept requests (server enforced). Accepts '*' wildcard.",
 		Value: strings.Join(node.DefaultConfig.AuthVirtualHosts, ","),
+	}
+
+
+	EthStatsURLFlag = cli.StringFlag{
+		Name:  "ethstats",
+		Usage: "Reporting URL of a ethstats service (nodename:secret@host:port)",
 	}
 
 	// RPC settings
@@ -218,16 +237,6 @@ func SetP2PConfig(ctx *cli.Context, cfg *p2p.Config) {
 	if ctx.GlobalIsSet(NoDiscoverFlag.Name) {
 		cfg.NoDiscovery = true
 	}
-
-	//// if we're running a light client or server, force enable the v5 peer discovery
-	//// unless it is explicitly disabled with --nodiscover note that explicitly specifying
-	//// --v5disc overrides --nodiscover, in which case the later only disables v4 discovery
-	//forceV5Discovery := (lightClient || lightServer) && !ctx.GlobalBool(NoDiscoverFlag.Name)
-	//if ctx.GlobalIsSet(DiscoveryV5Flag.Name) {
-	//	cfg.DiscoveryV5 = ctx.GlobalBool(DiscoveryV5Flag.Name)
-	//} else if forceV5Discovery {
-	//	cfg.DiscoveryV5 = true
-	//}
 
 	if netrestrict := ctx.GlobalString(NetrestrictFlag.Name); netrestrict != "" {
 		list, err := netutil.ParseNetlist(netrestrict)
@@ -375,5 +384,111 @@ func setDataDir(ctx *cli.Context, cfg *node.Config) {
 	switch {
 	case ctx.GlobalIsSet(DataDirFlag.Name):
 		cfg.DataDir = ctx.GlobalString(DataDirFlag.Name)
+	}
+}
+
+// CheckExclusive verifies that only a single instance of the provided flags was
+// set by the user. Each flag might optionally be followed by a string type to
+// specialize it further.
+func CheckExclusive(ctx *cli.Context, args ...interface{}) {
+	set := make([]string, 0, 1)
+	for i := 0; i < len(args); i++ {
+		// Make sure the next argument is a flag and skip if not set
+		flag, ok := args[i].(cli.Flag)
+		if !ok {
+			panic(fmt.Sprintf("invalid argument, not cli.Flag type: %T", args[i]))
+		}
+		// Check if next arg extends current and expand its name if so
+		name := flag.GetName()
+
+		if i+1 < len(args) {
+			switch option := args[i+1].(type) {
+			case string:
+				// Extended flag check, make sure value set doesn't conflict with passed in option
+				if ctx.GlobalString(flag.GetName()) == option {
+					name += "=" + option
+					set = append(set, "--"+name)
+				}
+				// shift arguments and continue
+				i++
+				continue
+
+			case cli.Flag:
+			default:
+				panic(fmt.Sprintf("invalid argument, not cli.Flag or string extension: %T", args[i+1]))
+			}
+		}
+		// Mark the flag if it's set
+		if ctx.GlobalIsSet(flag.GetName()) {
+			set = append(set, "--"+name)
+		}
+	}
+	if len(set) > 1 {
+		Fatalf("Flags %v can't be used at the same time", strings.Join(set, ", "))
+	}
+}
+
+
+// SetEthConfig applies eth-related command line flags to the config.
+func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
+	//TODO FIX THIS METHOD
+	CheckExclusive(ctx, MainnetFlag)
+
+	// Cap the cache allowance and tune the garbage collector
+	mem, err := gopsutil.VirtualMemory()
+	if err == nil {
+		if 32<<(^uintptr(0)>>63) == 32 && mem.Total > 2*1024*1024*1024 {
+			log.Warn("Lowering memory allowance on 32bit arch", "available", mem.Total/1024/1024, "addressable", 2*1024)
+			mem.Total = 2 * 1024 * 1024 * 1024
+		}
+	}
+	// Ensure Go's GC ignores the database cache for trigger percentage
+	//cache := ctx.GlobalInt(CacheFlag.Name)
+	gogc := math.Max(20, math.Min(100, 100/(float64(1024)/1024)))
+
+	log.Debug("Sanitizing Go's GC trigger", "percent", int(gogc))
+	godebug.SetGCPercent(int(gogc))
+
+
+	if ctx.GlobalIsSet(NetworkIdFlag.Name) {
+		cfg.NetworkId = ctx.GlobalUint64(NetworkIdFlag.Name)
+	}
+
+
+	if ctx.GlobalIsSet(DNSDiscoveryFlag.Name) {
+		urls := ctx.GlobalString(DNSDiscoveryFlag.Name)
+		if urls == "" {
+			cfg.EthDiscoveryURLs = []string{}
+		} else {
+			cfg.EthDiscoveryURLs = SplitAndTrim(urls)
+		}
+	}
+
+	switch {
+	case ctx.GlobalBool(MainnetFlag.Name):
+		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
+			cfg.NetworkId = 1
+		}
+		cfg.Genesis = core.DefaultGenesisBlock()
+		SetDNSDiscoveryDefaults(cfg, params.MainnetGenesisHash)
+	default:
+		if cfg.NetworkId == 1 {
+			SetDNSDiscoveryDefaults(cfg, params.MainnetGenesisHash)
+		}
+	}
+
+}
+
+// SetDNSDiscoveryDefaults configures DNS discovery with the given URL if
+// no URLs are set.
+func SetDNSDiscoveryDefaults(cfg *ethconfig.Config, genesis common.Hash) {
+	if cfg.EthDiscoveryURLs != nil {
+		return // already set through flags/config
+	}
+	protocol := "all"
+
+	if url := params.KnownDNSNetwork(genesis, protocol); url != "" {
+		cfg.EthDiscoveryURLs = []string{url}
+		cfg.SnapDiscoveryURLs = cfg.EthDiscoveryURLs
 	}
 }

@@ -89,14 +89,14 @@ password to file or expose in any other way.
 )
 
 func accountList(ctx *cli.Context) error {
-	//stack, _ := makeConfigNode(ctx)
-	//var index int
-	//for _, wallet := range stack.AccountManager().Wallets() {
-	//	for _, account := range wallet.Accounts() {
-	//		fmt.Printf("Account #%d: {%x} %s\n", index, account.Address, &account.URL)
-	//		index++
-	//	}
-	//}
+	stack, _ := makeConfigNode(ctx)
+	var index int
+	for _, wallet := range stack.AccountManager().Wallets() {
+		for _, account := range wallet.Accounts() {
+			fmt.Printf("Account #%d: {%x} %s\n", index, account.Address, &account.URL)
+			index++
+		}
+	}
 	return nil
 }
 

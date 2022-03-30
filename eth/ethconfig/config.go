@@ -98,3 +98,8 @@ type Config struct {
 	// OverrideTerminalTotalDifficulty (TODO: remove after the fork)
 	OverrideTerminalTotalDifficulty *big.Int `toml:",omitempty"`
 }
+
+// Defaults contains default settings for use on the Ethereum main net.
+var Defaults = Config{
+	NetworkId: 1,
+}

@@ -28,30 +28,30 @@ import (
 // Genesis hashes to enforce below configs on.
 var (
 	MainnetGenesisHash = common.HexToHash("0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3")
-	RopstenGenesisHash = common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d")
-	SepoliaGenesisHash = common.HexToHash("0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9")
-	RinkebyGenesisHash = common.HexToHash("0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177")
-	GoerliGenesisHash  = common.HexToHash("0xbf7e331f7f7c1dd2e05159666b3bf8bc7a8a3a9eb1d518969eab529dd9b88c1a")
-	KilnGenesisHash    = common.HexToHash("0x51c7fe41be669f69c45c33a56982cbde405313342d9e2b00d7c91a7b284dd4f8")
+	//RopstenGenesisHash = common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d")
+	//SepoliaGenesisHash = common.HexToHash("0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9")
+	//RinkebyGenesisHash = common.HexToHash("0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177")
+	//GoerliGenesisHash  = common.HexToHash("0xbf7e331f7f7c1dd2e05159666b3bf8bc7a8a3a9eb1d518969eab529dd9b88c1a")
+	//KilnGenesisHash    = common.HexToHash("0x51c7fe41be669f69c45c33a56982cbde405313342d9e2b00d7c91a7b284dd4f8")
 )
 
 // TrustedCheckpoints associates each known checkpoint with the genesis hash of
 // the chain it belongs to.
 var TrustedCheckpoints = map[common.Hash]*TrustedCheckpoint{
 	MainnetGenesisHash: MainnetTrustedCheckpoint,
-	RopstenGenesisHash: RopstenTrustedCheckpoint,
-	SepoliaGenesisHash: SepoliaTrustedCheckpoint,
-	RinkebyGenesisHash: RinkebyTrustedCheckpoint,
-	GoerliGenesisHash:  GoerliTrustedCheckpoint,
+	//RopstenGenesisHash: RopstenTrustedCheckpoint,
+	//SepoliaGenesisHash: SepoliaTrustedCheckpoint,
+	//RinkebyGenesisHash: RinkebyTrustedCheckpoint,
+	//GoerliGenesisHash:  GoerliTrustedCheckpoint,
 }
 
 // CheckpointOracles associates each known checkpoint oracles with the genesis hash of
 // the chain it belongs to.
 var CheckpointOracles = map[common.Hash]*CheckpointOracleConfig{
 	MainnetGenesisHash: MainnetCheckpointOracle,
-	RopstenGenesisHash: RopstenCheckpointOracle,
-	RinkebyGenesisHash: RinkebyCheckpointOracle,
-	GoerliGenesisHash:  GoerliCheckpointOracle,
+	//RopstenGenesisHash: RopstenCheckpointOracle,
+	//RinkebyGenesisHash: RinkebyCheckpointOracle,
+	//GoerliGenesisHash:  GoerliCheckpointOracle,
 }
 
 var (
@@ -97,97 +97,97 @@ var (
 		Threshold: 2,
 	}
 
-	// RopstenChainConfig contains the chain parameters to run a node on the Ropsten test network.
-	RopstenChainConfig = &ChainConfig{
-		ChainID:             big.NewInt(3),
-		HomesteadBlock:      big.NewInt(0),
-		DAOForkBlock:        nil,
-		DAOForkSupport:      true,
-		EIP150Block:         big.NewInt(0),
-		EIP150Hash:          common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d"),
-		EIP155Block:         big.NewInt(10),
-		EIP158Block:         big.NewInt(10),
-		ByzantiumBlock:      big.NewInt(1_700_000),
-		ConstantinopleBlock: big.NewInt(4_230_000),
-		PetersburgBlock:     big.NewInt(4_939_394),
-		IstanbulBlock:       big.NewInt(6_485_846),
-		MuirGlacierBlock:    big.NewInt(7_117_117),
-		BerlinBlock:         big.NewInt(9_812_189),
-		LondonBlock:         big.NewInt(10_499_401),
-		Ethash:              new(EthashConfig),
-	}
+	//// RopstenChainConfig contains the chain parameters to run a node on the Ropsten test network.
+	//RopstenChainConfig = &ChainConfig{
+	//	ChainID:             big.NewInt(3),
+	//	HomesteadBlock:      big.NewInt(0),
+	//	DAOForkBlock:        nil,
+	//	DAOForkSupport:      true,
+	//	EIP150Block:         big.NewInt(0),
+	//	EIP150Hash:          common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d"),
+	//	EIP155Block:         big.NewInt(10),
+	//	EIP158Block:         big.NewInt(10),
+	//	ByzantiumBlock:      big.NewInt(1_700_000),
+	//	ConstantinopleBlock: big.NewInt(4_230_000),
+	//	PetersburgBlock:     big.NewInt(4_939_394),
+	//	IstanbulBlock:       big.NewInt(6_485_846),
+	//	MuirGlacierBlock:    big.NewInt(7_117_117),
+	//	BerlinBlock:         big.NewInt(9_812_189),
+	//	LondonBlock:         big.NewInt(10_499_401),
+	//	Ethash:              new(EthashConfig),
+	//}
+	//
+	//// RopstenTrustedCheckpoint contains the light client trusted checkpoint for the Ropsten test network.
+	//RopstenTrustedCheckpoint = &TrustedCheckpoint{
+	//	SectionIndex: 346,
+	//	SectionHead:  common.HexToHash("0xafa0384ebd13a751fb7475aaa7fc08ac308925c8b2e2195bca2d4ab1878a7a84"),
+	//	CHTRoot:      common.HexToHash("0x522ae1f334bfa36033b2315d0b9954052780700b69448ecea8d5877e0f7ee477"),
+	//	BloomRoot:    common.HexToHash("0x4093fd53b0d2cc50181dca353fe66f03ae113e7cb65f869a4dfb5905de6a0493"),
+	//}
+	//
+	//// RopstenCheckpointOracle contains a set of configs for the Ropsten test network oracle.
+	//RopstenCheckpointOracle = &CheckpointOracleConfig{
+	//	Address: common.HexToAddress("0xEF79475013f154E6A65b54cB2742867791bf0B84"),
+	//	Signers: []common.Address{
+	//		common.HexToAddress("0x32162F3581E88a5f62e8A61892B42C46E2c18f7b"), // Peter
+	//		common.HexToAddress("0x78d1aD571A1A09D60D9BBf25894b44e4C8859595"), // Martin
+	//		common.HexToAddress("0x286834935f4A8Cfb4FF4C77D5770C2775aE2b0E7"), // Zsolt
+	//		common.HexToAddress("0xb86e2B0Ab5A4B1373e40c51A7C712c70Ba2f9f8E"), // Gary
+	//		common.HexToAddress("0x0DF8fa387C602AE62559cC4aFa4972A7045d6707"), // Guillaume
+	//	},
+	//	Threshold: 2,
+	//}
 
-	// RopstenTrustedCheckpoint contains the light client trusted checkpoint for the Ropsten test network.
-	RopstenTrustedCheckpoint = &TrustedCheckpoint{
-		SectionIndex: 346,
-		SectionHead:  common.HexToHash("0xafa0384ebd13a751fb7475aaa7fc08ac308925c8b2e2195bca2d4ab1878a7a84"),
-		CHTRoot:      common.HexToHash("0x522ae1f334bfa36033b2315d0b9954052780700b69448ecea8d5877e0f7ee477"),
-		BloomRoot:    common.HexToHash("0x4093fd53b0d2cc50181dca353fe66f03ae113e7cb65f869a4dfb5905de6a0493"),
-	}
-
-	// RopstenCheckpointOracle contains a set of configs for the Ropsten test network oracle.
-	RopstenCheckpointOracle = &CheckpointOracleConfig{
-		Address: common.HexToAddress("0xEF79475013f154E6A65b54cB2742867791bf0B84"),
-		Signers: []common.Address{
-			common.HexToAddress("0x32162F3581E88a5f62e8A61892B42C46E2c18f7b"), // Peter
-			common.HexToAddress("0x78d1aD571A1A09D60D9BBf25894b44e4C8859595"), // Martin
-			common.HexToAddress("0x286834935f4A8Cfb4FF4C77D5770C2775aE2b0E7"), // Zsolt
-			common.HexToAddress("0xb86e2B0Ab5A4B1373e40c51A7C712c70Ba2f9f8E"), // Gary
-			common.HexToAddress("0x0DF8fa387C602AE62559cC4aFa4972A7045d6707"), // Guillaume
-		},
-		Threshold: 2,
-	}
-
-	// SepoliaChainConfig contains the chain parameters to run a node on the Sepolia test network.
-	SepoliaChainConfig = &ChainConfig{
-		ChainID:             big.NewInt(11155111),
-		HomesteadBlock:      big.NewInt(0),
-		DAOForkBlock:        nil,
-		DAOForkSupport:      true,
-		EIP150Block:         big.NewInt(0),
-		EIP155Block:         big.NewInt(0),
-		EIP158Block:         big.NewInt(0),
-		ByzantiumBlock:      big.NewInt(0),
-		ConstantinopleBlock: big.NewInt(0),
-		PetersburgBlock:     big.NewInt(0),
-		IstanbulBlock:       big.NewInt(0),
-		MuirGlacierBlock:    big.NewInt(0),
-		BerlinBlock:         big.NewInt(0),
-		LondonBlock:         big.NewInt(0),
-		Ethash:              new(EthashConfig),
-	}
-
-	// SepoliaTrustedCheckpoint contains the light client trusted checkpoint for the Sepolia test network.
-	SepoliaTrustedCheckpoint = &TrustedCheckpoint{
-		SectionIndex: 1,
-		SectionHead:  common.HexToHash("0x5dde65e28745b10ff9e9b86499c3a3edc03587b27a06564a4342baf3a37de869"),
-		CHTRoot:      common.HexToHash("0x042a0d914f7baa4f28f14d12291e5f346e88c5b9d95127bf5422a8afeacd27e8"),
-		BloomRoot:    common.HexToHash("0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
-	}
-
-	// RinkebyChainConfig contains the chain parameters to run a node on the Rinkeby test network.
-	RinkebyChainConfig = &ChainConfig{
-		ChainID:             big.NewInt(4),
-		HomesteadBlock:      big.NewInt(1),
-		DAOForkBlock:        nil,
-		DAOForkSupport:      true,
-		EIP150Block:         big.NewInt(2),
-		EIP150Hash:          common.HexToHash("0x9b095b36c15eaf13044373aef8ee0bd3a382a5abb92e402afa44b8249c3a90e9"),
-		EIP155Block:         big.NewInt(3),
-		EIP158Block:         big.NewInt(3),
-		ByzantiumBlock:      big.NewInt(1_035_301),
-		ConstantinopleBlock: big.NewInt(3_660_663),
-		PetersburgBlock:     big.NewInt(4_321_234),
-		IstanbulBlock:       big.NewInt(5_435_345),
-		MuirGlacierBlock:    nil,
-		BerlinBlock:         big.NewInt(8_290_928),
-		LondonBlock:         big.NewInt(8_897_988),
-		ArrowGlacierBlock:   nil,
-		Clique: &CliqueConfig{
-			Period: 15,
-			Epoch:  30000,
-		},
-	}
+	//// SepoliaChainConfig contains the chain parameters to run a node on the Sepolia test network.
+	//SepoliaChainConfig = &ChainConfig{
+	//	ChainID:             big.NewInt(11155111),
+	//	HomesteadBlock:      big.NewInt(0),
+	//	DAOForkBlock:        nil,
+	//	DAOForkSupport:      true,
+	//	EIP150Block:         big.NewInt(0),
+	//	EIP155Block:         big.NewInt(0),
+	//	EIP158Block:         big.NewInt(0),
+	//	ByzantiumBlock:      big.NewInt(0),
+	//	ConstantinopleBlock: big.NewInt(0),
+	//	PetersburgBlock:     big.NewInt(0),
+	//	IstanbulBlock:       big.NewInt(0),
+	//	MuirGlacierBlock:    big.NewInt(0),
+	//	BerlinBlock:         big.NewInt(0),
+	//	LondonBlock:         big.NewInt(0),
+	//	Ethash:              new(EthashConfig),
+	//}
+	//
+	//// SepoliaTrustedCheckpoint contains the light client trusted checkpoint for the Sepolia test network.
+	//SepoliaTrustedCheckpoint = &TrustedCheckpoint{
+	//	SectionIndex: 1,
+	//	SectionHead:  common.HexToHash("0x5dde65e28745b10ff9e9b86499c3a3edc03587b27a06564a4342baf3a37de869"),
+	//	CHTRoot:      common.HexToHash("0x042a0d914f7baa4f28f14d12291e5f346e88c5b9d95127bf5422a8afeacd27e8"),
+	//	BloomRoot:    common.HexToHash("0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
+	//}
+	//
+	//// RinkebyChainConfig contains the chain parameters to run a node on the Rinkeby test network.
+	//RinkebyChainConfig = &ChainConfig{
+	//	ChainID:             big.NewInt(4),
+	//	HomesteadBlock:      big.NewInt(1),
+	//	DAOForkBlock:        nil,
+	//	DAOForkSupport:      true,
+	//	EIP150Block:         big.NewInt(2),
+	//	EIP150Hash:          common.HexToHash("0x9b095b36c15eaf13044373aef8ee0bd3a382a5abb92e402afa44b8249c3a90e9"),
+	//	EIP155Block:         big.NewInt(3),
+	//	EIP158Block:         big.NewInt(3),
+	//	ByzantiumBlock:      big.NewInt(1_035_301),
+	//	ConstantinopleBlock: big.NewInt(3_660_663),
+	//	PetersburgBlock:     big.NewInt(4_321_234),
+	//	IstanbulBlock:       big.NewInt(5_435_345),
+	//	MuirGlacierBlock:    nil,
+	//	BerlinBlock:         big.NewInt(8_290_928),
+	//	LondonBlock:         big.NewInt(8_897_988),
+	//	ArrowGlacierBlock:   nil,
+	//	Clique: &CliqueConfig{
+	//		Period: 15,
+	//		Epoch:  30000,
+	//	},
+	//}
 
 	// RinkebyTrustedCheckpoint contains the light client trusted checkpoint for the Rinkeby test network.
 	RinkebyTrustedCheckpoint = &TrustedCheckpoint{

@@ -35,7 +35,7 @@ import (
 	"peerInfoCollect/common"
 	//"peerInfoCollect/core/types"
 	"peerInfoCollect/crypto"
-	//"github.com/ethereum/go-ethereum/event"
+	"peerInfoCollect/event"
 )
 
 var (
@@ -179,23 +179,23 @@ func (ks *KeyStore) Wallets() []accounts.Wallet {
 //	}
 //}
 //
-//// Subscribe implements accounts.Backend, creating an async subscription to
-//// receive notifications on the addition or removal of keystore wallets.
-//func (ks *KeyStore) Subscribe(sink chan<- accounts.WalletEvent) event.Subscription {
-//	// We need the mutex to reliably start/stop the update loop
-//	ks.mu.Lock()
-//	defer ks.mu.Unlock()
-//
-//	// Subscribe the caller and track the subscriber count
-//	sub := ks.updateScope.Track(ks.updateFeed.Subscribe(sink))
-//
-//	// Subscribers require an active notification loop, start it
-//	if !ks.updating {
-//		ks.updating = true
-//		go ks.updater()
-//	}
-//	return sub
-//}
+// Subscribe implements accounts.Backend, creating an async subscription to
+// receive notifications on the addition or removal of keystore wallets.
+func (ks *KeyStore) Subscribe(sink chan<- accounts.WalletEvent) event.Subscription {
+	// We need the mutex to reliably start/stop the update loop
+	ks.mu.Lock()
+	defer ks.mu.Unlock()
+
+	//// Subscribe the caller and track the subscriber count
+	//sub := ks.updateScope.Track(ks.updateFeed.Subscribe(sink))
+	//
+	//// Subscribers require an active notification loop, start it
+	//if !ks.updating {
+	//	ks.updating = true
+	//	go ks.updater()
+	//}
+	return nil
+}
 
 // updater is responsible for maintaining an up-to-date list of wallets stored in
 // the keystore, and for firing wallet addition/removal events. It listens for

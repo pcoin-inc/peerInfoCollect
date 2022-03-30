@@ -4,12 +4,21 @@ import (
 	"golang.org/x/crypto/sha3"
 	"peerInfoCollect/common"
 	"fmt"
+	"peerInfoCollect/event"
 )
 
 type Account struct {
 	Address common.Address `json:"address"` // Ethereum account address derived from the key
 	URL     URL            `json:"url"`     // Optional resource locator within a backend
 }
+
+const (
+	MimetypeDataWithValidator = "data/validator"
+	MimetypeTypedData         = "data/typed"
+	MimetypeClique            = "application/x-clique-header"
+	MimetypeTextPlain         = "text/plain"
+)
+
 
 // Wallet represents a software or hardware wallet that might contain one or more
 // accounts (derived from the same seed).
@@ -139,7 +148,7 @@ type Backend interface {
 
 	// Subscribe creates an async subscription to receive notifications when the
 	// backend detects the arrival or departure of a wallet.
-	//Subscribe(sink chan<- WalletEvent) event.Subscription
+	Subscribe(sink chan<- WalletEvent) event.Subscription
 }
 
 // TextHash is a helper function that calculates a hash for the given message that can be
@@ -166,4 +175,28 @@ func TextAndHash(data []byte) ([]byte, string) {
 	hasher := sha3.NewLegacyKeccak256()
 	hasher.Write([]byte(msg))
 	return hasher.Sum(nil), msg
+}
+
+// WalletEventType represents the different event types that can be fired by
+// the wallet subscription subsystem.
+type WalletEventType int
+
+const (
+	// WalletArrived is fired when a new wallet is detected either via USB or via
+	// a filesystem event in the keystore.
+	WalletArrived WalletEventType = iota
+
+	// WalletOpened is fired when a wallet is successfully opened with the purpose
+	// of starting any background processes such as automatic key derivation.
+	WalletOpened
+
+	// WalletDropped
+	WalletDropped
+)
+
+// WalletEvent is an event fired by an account backend when a wallet arrival or
+// departure is detected.
+type WalletEvent struct {
+	Wallet Wallet          // Wallet instance arrived or departed
+	Kind   WalletEventType // Event type that happened in the system
 }
