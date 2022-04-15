@@ -27,16 +27,16 @@ import (
 
 	"gopkg.in/urfave/cli.v1"
 
-	"github.com/ethereum/go-ethereum/accounts/external"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/core/rawdb"
-	"github.com/ethereum/go-ethereum/eth/ethconfig"
-	"github.com/ethereum/go-ethereum/internal/ethapi"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/metrics"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/params"
+	"peerInfoCollect/accounts/external"
+	"peerInfoCollect/accounts/keystore"
+	"peerInfoCollect/cmd/utils"
+	"peerInfoCollect/core/rawdb"
+	"peerInfoCollect/eth/ethconfig"
+	"peerInfoCollect/internal/ethapi"
+	"peerInfoCollect/log"
+	"peerInfoCollect/metrics"
+	"peerInfoCollect/node"
+	"peerInfoCollect/params"
 	"github.com/naoina/toml"
 )
 

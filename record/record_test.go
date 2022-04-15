@@ -2,7 +2,7 @@ package record
 
 import (
 	"context"
-	"github.com/ethereum/go-ethereum/ethclient"
+	"peerInfoCollect/ethclient"
 	"go.mongodb.org/mongo-driver/mongo"
 	"testing"
 )

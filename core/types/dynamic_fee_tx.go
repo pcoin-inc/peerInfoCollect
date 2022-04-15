@@ -19,7 +19,7 @@ package types
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
+	"peerInfoCollect/common"
 )
 
 type DynamicFeeTx struct {

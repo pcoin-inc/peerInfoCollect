@@ -22,9 +22,9 @@ import (
 	"io"
 	"sort"
 
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/internal/debug"
-	"github.com/ethereum/go-ethereum/internal/flags"
+	"peerInfoCollect/cmd/utils"
+	"peerInfoCollect/internal/debug"
+	"peerInfoCollect/internal/flags"
 	"gopkg.in/urfave/cli.v1"
 )
 
@@ -125,7 +125,6 @@ var AppHelpFlagGroups = []flags.FlagGroup{
 			utils.RPCGlobalEVMTimeoutFlag,
 			utils.RPCGlobalTxFeeCapFlag,
 			utils.AllowUnprotectedTxs,
-			utils.JSpathFlag,
 			utils.ExecFlag,
 			utils.PreloadJSFlag,
 		},

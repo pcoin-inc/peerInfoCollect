@@ -21,13 +21,13 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/bloombits"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/rpc"
+	"peerInfoCollect/common"
+	"peerInfoCollect/core"
+	"peerInfoCollect/core/bloombits"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/ethdb"
+	"peerInfoCollect/event"
+	"peerInfoCollect/rpc"
 )
 
 type Backend interface {

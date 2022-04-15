@@ -20,9 +20,9 @@ import (
 	"crypto/rand"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/core/types"
+	"peerInfoCollect/common"
+	"peerInfoCollect/common/hexutil"
+	"peerInfoCollect/core/types"
 )
 
 // largeNumber returns a very large big.Int.

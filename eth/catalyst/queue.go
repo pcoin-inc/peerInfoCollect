@@ -19,9 +19,9 @@ package catalyst
 import (
 	"sync"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/beacon"
-	"github.com/ethereum/go-ethereum/core/types"
+	"peerInfoCollect/common"
+	"peerInfoCollect/core/beacon"
+	"peerInfoCollect/core/types"
 )
 
 // maxTrackedPayloads is the maximum number of prepared payloads the execution

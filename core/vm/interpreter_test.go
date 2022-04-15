@@ -21,11 +21,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/math"
-	"github.com/ethereum/go-ethereum/core/rawdb"
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/params"
+	"peerInfoCollect/common"
+	"peerInfoCollect/common/math"
+	"peerInfoCollect/core/rawdb"
+	"peerInfoCollect/core/state"
+	"peerInfoCollect/params"
 )
 
 var loopInterruptTests = []string{

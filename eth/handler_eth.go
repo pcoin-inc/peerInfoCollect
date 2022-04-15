@@ -18,13 +18,13 @@ package eth
 
 import (
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/eth/protocols/eth"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/p2p/enode"
-	"github.com/ethereum/go-ethereum/record"
+	"peerInfoCollect/common"
+	"peerInfoCollect/core"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/eth/protocols/eth"
+	"peerInfoCollect/log"
+	"peerInfoCollect/p2p/enode"
+	"peerInfoCollect/record"
 	"math/big"
 	"sync/atomic"
 )

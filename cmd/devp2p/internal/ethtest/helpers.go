@@ -24,13 +24,13 @@ import (
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/eth/protocols/eth"
-	"github.com/ethereum/go-ethereum/internal/utesting"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/rlpx"
+	"peerInfoCollect/common"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/crypto"
+	"peerInfoCollect/eth/protocols/eth"
+	"peerInfoCollect/internal/utesting"
+	"peerInfoCollect/p2p"
+	"peerInfoCollect/p2p/rlpx"
 )
 
 var (

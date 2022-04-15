@@ -23,10 +23,10 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/rlp"
+	"peerInfoCollect/common"
+	"peerInfoCollect/crypto"
+	"peerInfoCollect/params"
+	"peerInfoCollect/rlp"
 )
 
 var (

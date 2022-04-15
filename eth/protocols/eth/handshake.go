@@ -19,14 +19,14 @@ package eth
 import (
 	"errors"
 	"fmt"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/log"
+	"peerInfoCollect/common/hexutil"
+	"peerInfoCollect/log"
 	"math/big"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/forkid"
-	"github.com/ethereum/go-ethereum/p2p"
+	"peerInfoCollect/common"
+	"peerInfoCollect/core/forkid"
+	"peerInfoCollect/p2p"
 	"sync/atomic"
 )
 

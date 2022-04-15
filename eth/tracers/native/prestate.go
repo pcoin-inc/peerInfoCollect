@@ -22,12 +22,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/eth/tracers"
+	"peerInfoCollect/common"
+	"peerInfoCollect/common/hexutil"
+	"peerInfoCollect/core"
+	"peerInfoCollect/core/vm"
+	"peerInfoCollect/crypto"
+	"peerInfoCollect/eth/tracers"
 )
 
 func init() {

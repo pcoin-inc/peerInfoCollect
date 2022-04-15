@@ -21,11 +21,11 @@ import (
 	"fmt"
 
 	"github.com/VictoriaMetrics/fastcache"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/rawdb"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/trie"
+	"peerInfoCollect/common"
+	"peerInfoCollect/core/rawdb"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/ethdb"
+	"peerInfoCollect/trie"
 	lru "github.com/hashicorp/golang-lru"
 )
 

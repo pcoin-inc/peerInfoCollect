@@ -20,9 +20,9 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/params"
+	"peerInfoCollect/common"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/params"
 )
 
 // copyConfig does a _shallow_ copy of a given config. Safe to set new values, but

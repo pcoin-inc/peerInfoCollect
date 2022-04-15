@@ -20,16 +20,16 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/rawdb"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/eth/tracers/logger"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/tests"
+	"peerInfoCollect/common"
+	"peerInfoCollect/common/hexutil"
+	"peerInfoCollect/core"
+	"peerInfoCollect/core/rawdb"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/core/vm"
+	"peerInfoCollect/crypto"
+	"peerInfoCollect/eth/tracers/logger"
+	"peerInfoCollect/params"
+	"peerInfoCollect/tests"
 )
 
 // callTrace is the result of a callTracer run.

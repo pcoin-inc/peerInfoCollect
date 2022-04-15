@@ -21,15 +21,15 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/metrics"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/enode"
-	"github.com/ethereum/go-ethereum/p2p/enr"
-	"github.com/ethereum/go-ethereum/rlp"
-	"github.com/ethereum/go-ethereum/trie"
+	"peerInfoCollect/common"
+	"peerInfoCollect/core"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/metrics"
+	"peerInfoCollect/p2p"
+	"peerInfoCollect/p2p/enode"
+	"peerInfoCollect/p2p/enr"
+	"peerInfoCollect/rlp"
+	"peerInfoCollect/trie"
 )
 
 const (

@@ -22,14 +22,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/internal/ethapi"
-	"github.com/ethereum/go-ethereum/signer/core"
-	"github.com/ethereum/go-ethereum/signer/core/apitypes"
-	"github.com/ethereum/go-ethereum/signer/storage"
+	"peerInfoCollect/accounts"
+	"peerInfoCollect/common"
+	"peerInfoCollect/common/hexutil"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/internal/ethapi"
+	"peerInfoCollect/signer/core"
+	"peerInfoCollect/signer/core/apitypes"
+	"peerInfoCollect/signer/storage"
 )
 
 const JS = `

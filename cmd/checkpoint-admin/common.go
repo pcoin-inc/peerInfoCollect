@@ -19,15 +19,15 @@ package main
 import (
 	"strconv"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/accounts/external"
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/contracts/checkpointoracle"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/rpc"
+	"peerInfoCollect/accounts"
+	"peerInfoCollect/accounts/abi/bind"
+	"peerInfoCollect/accounts/external"
+	"peerInfoCollect/cmd/utils"
+	"peerInfoCollect/common"
+	"peerInfoCollect/contracts/checkpointoracle"
+	"peerInfoCollect/ethclient"
+	"peerInfoCollect/params"
+	"peerInfoCollect/rpc"
 	"gopkg.in/urfave/cli.v1"
 )
 

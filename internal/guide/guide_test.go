@@ -30,9 +30,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
+	"peerInfoCollect/accounts/keystore"
+	"peerInfoCollect/common"
+	"peerInfoCollect/core/types"
 )
 
 // Tests that the account management snippets work correctly.

@@ -1,4 +1,4 @@
-module github.com/ethereum/go-ethereum
+module peerInfoCollect
 
 go 1.15
 

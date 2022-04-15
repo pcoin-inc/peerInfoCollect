@@ -23,12 +23,12 @@ import (
 	"sort"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/rawdb"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/eth/protocols/eth"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/log"
+	"peerInfoCollect/common"
+	"peerInfoCollect/core/rawdb"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/eth/protocols/eth"
+	"peerInfoCollect/ethdb"
+	"peerInfoCollect/log"
 )
 
 // scratchHeaders is the number of headers to store in a scratch space to allow

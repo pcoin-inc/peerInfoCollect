@@ -17,7 +17,7 @@
 package state
 
 import (
-	"github.com/ethereum/go-ethereum/common"
+	"peerInfoCollect/common"
 )
 
 type accessList struct {

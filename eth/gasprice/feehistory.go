@@ -26,11 +26,11 @@ import (
 	"sort"
 	"sync/atomic"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/consensus/misc"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/rpc"
+	"peerInfoCollect/common"
+	"peerInfoCollect/consensus/misc"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/log"
+	"peerInfoCollect/rpc"
 )
 
 var (

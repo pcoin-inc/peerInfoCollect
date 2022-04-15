@@ -26,10 +26,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/internal/testlog"
-	"github.com/ethereum/go-ethereum/log"
+	"peerInfoCollect/common"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/internal/testlog"
+	"peerInfoCollect/log"
 )
 
 // Tests whether remote HTTP servers are correctly notified of new work.

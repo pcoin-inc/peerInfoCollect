@@ -20,12 +20,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/bitutil"
-	"github.com/ethereum/go-ethereum/core/bloombits"
-	"github.com/ethereum/go-ethereum/core/rawdb"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethdb"
+	"peerInfoCollect/common"
+	"peerInfoCollect/common/bitutil"
+	"peerInfoCollect/core/bloombits"
+	"peerInfoCollect/core/rawdb"
+	"peerInfoCollect/core/types"
+	"peerInfoCollect/ethdb"
 )
 
 const (

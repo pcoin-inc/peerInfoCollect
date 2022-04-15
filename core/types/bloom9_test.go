@@ -21,8 +21,8 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
+	"peerInfoCollect/common"
+	"peerInfoCollect/crypto"
 )
 
 func TestBloom(t *testing.T) {

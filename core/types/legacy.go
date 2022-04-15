@@ -19,7 +19,7 @@ package types
 import (
 	"errors"
 
-	"github.com/ethereum/go-ethereum/rlp"
+	"peerInfoCollect/rlp"
 )
 
 // IsLegacyStoredReceipts tries to parse the RLP-encoded blob

@@ -25,7 +25,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/ethereum/go-ethereum/log"
+	"peerInfoCollect/log"
 )
 
 type storedCredential struct {

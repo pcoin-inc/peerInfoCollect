@@ -33,37 +33,37 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/fdlimit"
-	"github.com/ethereum/go-ethereum/consensus"
-	"github.com/ethereum/go-ethereum/consensus/clique"
-	"github.com/ethereum/go-ethereum/consensus/ethash"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/eth"
-	ethcatalyst "github.com/ethereum/go-ethereum/eth/catalyst"
-	"github.com/ethereum/go-ethereum/eth/downloader"
-	"github.com/ethereum/go-ethereum/eth/ethconfig"
-	"github.com/ethereum/go-ethereum/eth/gasprice"
-	"github.com/ethereum/go-ethereum/eth/tracers"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/ethstats"
-	"github.com/ethereum/go-ethereum/internal/ethapi"
-	"github.com/ethereum/go-ethereum/internal/flags"
+	"peerInfoCollect/accounts"
+	"peerInfoCollect/accounts/keystore"
+	"peerInfoCollect/common"
+	"peerInfoCollect/common/fdlimit"
+	"peerInfoCollect/consensus"
+	"peerInfoCollect/consensus/clique"
+	"peerInfoCollect/consensus/ethash"
+	"peerInfoCollect/core"
+	"peerInfoCollect/core/vm"
+	"peerInfoCollect/crypto"
+	"peerInfoCollect/eth"
+	ethcatalyst "peerInfoCollect/eth/catalyst"
+	"peerInfoCollect/eth/downloader"
+	"peerInfoCollect/eth/ethconfig"
+	"peerInfoCollect/eth/gasprice"
+	"peerInfoCollect/eth/tracers"
+	"peerInfoCollect/ethdb"
+	"peerInfoCollect/ethstats"
+	"peerInfoCollect/internal/ethapi"
+	"peerInfoCollect/internal/flags"
 
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/metrics"
-	"github.com/ethereum/go-ethereum/metrics/exp"
-	"github.com/ethereum/go-ethereum/metrics/influxdb"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/enode"
-	"github.com/ethereum/go-ethereum/p2p/nat"
-	"github.com/ethereum/go-ethereum/p2p/netutil"
-	"github.com/ethereum/go-ethereum/params"
+	"peerInfoCollect/log"
+	"peerInfoCollect/metrics"
+	"peerInfoCollect/metrics/exp"
+	"peerInfoCollect/metrics/influxdb"
+	"peerInfoCollect/node"
+	"peerInfoCollect/p2p"
+	"peerInfoCollect/p2p/enode"
+	"peerInfoCollect/p2p/nat"
+	"peerInfoCollect/p2p/netutil"
+	"peerInfoCollect/params"
 	gopsutil "github.com/shirou/gopsutil/mem"
 	"gopkg.in/urfave/cli.v1"
 )
@@ -110,27 +110,10 @@ var (
 		Usage: "Data directory for the databases and keystore",
 		Value: DirectoryString(node.DefaultDataDir()),
 	}
-	//AncientFlag = DirectoryFlag{
-	//	Name:  "datadir.ancient",
-	//	Usage: "Data directory for ancient chain segments (default = inside chaindata)",
-	//}
-	//MinFreeDiskSpaceFlag = DirectoryFlag{
-	//	Name:  "datadir.minfreedisk",
-	//	Usage: "Minimum free disk space in MB, once reached triggers auto shut down (default = --cache.gc converted to MB, 0 = disabled)",
-	//}
 	KeyStoreDirFlag = DirectoryFlag{
 		Name:  "keystore",
 		Usage: "Directory for the keystore (default = inside the datadir)",
 	}
-	//USBFlag = cli.BoolFlag{
-	//	Name:  "usb",
-	//	Usage: "Enable monitoring and management of USB hardware wallets",
-	//}
-	//SmartCardDaemonPathFlag = cli.StringFlag{
-	//	Name:  "pcscdpath",
-	//	Usage: "Path to the smartcard daemon (pcscd) socket file",
-	//	Value: pcsclite.PCSCDSockName,
-	//}
 	NetworkIdFlag = cli.Uint64Flag{
 		Name:  "networkid",
 		Usage: "Explicitly set network id (integer)(For testnets: use --ropsten, --rinkeby, --goerli instead)",
@@ -156,23 +139,6 @@ var (
 		Name:  "sepolia",
 		Usage: "Sepolia network: pre-configured proof-of-work test network",
 	}
-	//KilnFlag = cli.BoolFlag{
-	//	Name:  "kiln",
-	//	Usage: "Kiln network: pre-configured proof-of-work to proof-of-stake test network",
-	//}
-	//DeveloperFlag = cli.BoolFlag{
-	//	Name:  "dev",
-	//	Usage: "Ephemeral proof-of-authority network with a pre-funded developer account, mining enabled",
-	//}
-	//DeveloperPeriodFlag = cli.IntFlag{
-	//	Name:  "dev.period",
-	//	Usage: "Block period to use in developer mode (0 = mine only if transaction pending)",
-	//}
-	//DeveloperGasLimitFlag = cli.Uint64Flag{
-	//	Name:  "dev.gaslimit",
-	//	Usage: "Initial block gas limit",
-	//	Value: 11500000,
-	//}
 	IdentityFlag = cli.StringFlag{
 		Name:  "identity",
 		Usage: "Custom node name",
@@ -198,10 +164,6 @@ var (
 		Name:  "incompletes",
 		Usage: "Include accounts for which we don't have the address (missing preimage)",
 	}
-	//ExcludeCodeFlag = cli.BoolFlag{
-	//	Name:  "nocode",
-	//	Usage: "Exclude contract code (save db lookups)",
-	//}
 	StartKeyFlag = cli.StringFlag{
 		Name:  "start",
 		Usage: "Start position. Either a hash or address",
@@ -525,21 +487,6 @@ var (
 		Usage: "HTTP path path prefix on which JSON-RPC is served. Use '/' to serve on all paths.",
 		Value: "",
 	}
-	GraphQLEnabledFlag = cli.BoolFlag{
-		Name:  "graphql",
-		Usage: "Enable GraphQL on the HTTP-RPC server. Note that GraphQL can only be started if an HTTP server is started as well.",
-	}
-	GraphQLCORSDomainFlag = cli.StringFlag{
-		Name:  "graphql.corsdomain",
-		Usage: "Comma separated list of domains from which to accept cross origin requests (browser enforced)",
-		Value: "",
-	}
-	GraphQLVirtualHostsFlag = cli.StringFlag{
-		Name:  "graphql.vhosts",
-		Usage: "Comma separated list of virtual hostnames from which to accept requests (server enforced). Accepts '*' wildcard.",
-		Value: strings.Join(node.DefaultConfig.GraphQLVirtualHosts, ","),
-	}
-
 	ExecFlag = cli.StringFlag{
 		Name:  "exec",
 		Usage: "Execute JavaScript statement",
@@ -602,13 +549,6 @@ var (
 	DNSDiscoveryFlag = cli.StringFlag{
 		Name:  "discovery.dns",
 		Usage: "Sets DNS discovery entry points (use \"\" to disable DNS)",
-	}
-
-	// ATM the url is left to the user and deployment to
-	JSpathFlag = DirectoryFlag{
-		Name:  "jspath",
-		Usage: "JavaScript root path for `loadScript`",
-		Value: DirectoryString("."),
 	}
 
 	// Gas price oracle settings
@@ -907,17 +847,6 @@ func setHTTP(ctx *cli.Context, cfg *node.Config) {
 	}
 }
 
-// setGraphQL creates the GraphQL listener interface string from the set
-// command line flags, returning empty if the GraphQL endpoint is disabled.
-func setGraphQL(ctx *cli.Context, cfg *node.Config) {
-	if ctx.GlobalIsSet(GraphQLCORSDomainFlag.Name) {
-		cfg.GraphQLCors = SplitAndTrim(ctx.GlobalString(GraphQLCORSDomainFlag.Name))
-	}
-	if ctx.GlobalIsSet(GraphQLVirtualHostsFlag.Name) {
-		cfg.GraphQLVirtualHosts = SplitAndTrim(ctx.GlobalString(GraphQLVirtualHostsFlag.Name))
-	}
-}
-
 // setIPC creates an IPC path configuration from the set command line flags,
 // returning an empty string if IPC was explicitly disabled, or the set path.
 func setIPC(ctx *cli.Context, cfg *node.Config) {
@@ -1049,7 +978,6 @@ func SetNodeConfig(ctx *cli.Context, cfg *node.Config) {
 	SetP2PConfig(ctx, &cfg.P2P)
 	setIPC(ctx, cfg)
 	setHTTP(ctx, cfg)
-	setGraphQL(ctx, cfg)
 	setNodeUserIdent(ctx, cfg)
 	setDataDir(ctx, cfg)
 
