@@ -2,29 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="941b18a2-d12a-437e-9e25-7dc15a8a930c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/bin/geth" beforeDir="false" afterPath="$PROJECT_DIR$/build/bin/geth" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/geth/accountcmd_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/geth/chaincmd.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/geth/chaincmd.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/geth/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/geth/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/geth/consolecmd.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/geth/consolecmd_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/geth/dao_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/geth/dbcmd.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/geth/genesis_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/geth/les_test.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/geth/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/geth/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/asm/asm.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/asm/asm_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/asm/compiler.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/asm/compiler_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/asm/lex_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/asm/lexer.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ethclient/ethclient.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ethclient/ethclient_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ethclient/gethclient/gethclient.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ethclient/gethclient/gethclient_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ethclient/signer.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
