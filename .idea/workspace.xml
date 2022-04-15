@@ -46,7 +46,18 @@
       <change beforePath="$PROJECT_DIR$/accounts/keystore/wallet.go" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/keystore/wallet.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/accounts/keystore/watch.go" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/keystore/watch.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/accounts/manager.go" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/manager.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/abidump" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/abigen" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/bootnode" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/checkpoint-admin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/clef" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/devp2p" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/ethkey" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/evm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/faucet" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/bin/geth" beforeDir="false" afterPath="$PROJECT_DIR$/build/bin/geth" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/p2psim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/bin/puppeth" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/ci.go" beforeDir="false" afterPath="$PROJECT_DIR$/build/ci.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/deb/ethereum/deb.control" beforeDir="false" afterPath="$PROJECT_DIR$/build/deb/ethereum/deb.control" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/mvn.pom" beforeDir="false" afterPath="$PROJECT_DIR$/build/mvn.pom" afterDir="false" />
