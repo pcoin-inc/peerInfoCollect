@@ -32,10 +32,10 @@ import (
 	"sync"
 	"time"
 
-	"peerInfoCollect/common"
-	"peerInfoCollect/log"
-	"peerInfoCollect/p2p/enode"
-	"peerInfoCollect/p2p/netutil"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/log"
+	"github.com/ethereum/go-ethereum/p2p/enode"
+	"github.com/ethereum/go-ethereum/p2p/netutil"
 )
 
 const (

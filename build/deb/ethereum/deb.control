@@ -3,10 +3,10 @@ Section: science
 Priority: extra
 Maintainer: {{.Author}}
 Build-Depends: debhelper (>= 8.0.0), {{.GoBootPackage}}
-Standards-Version: 0.0.1
-Homepage:
-Vcs-Git: git://github.com/pcoin-inc/peerInfoCollect.git
-Vcs-Browser: https://github.com/pcoin-inc/peerInfoCollect
+Standards-Version: 3.9.5
+Homepage: https://ethereum.org
+Vcs-Git: git://github.com/ethereum/go-ethereum.git
+Vcs-Browser: https://github.com/ethereum/go-ethereum
 
 Package: {{.Name}}
 Architecture: any

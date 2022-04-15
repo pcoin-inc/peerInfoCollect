@@ -25,13 +25,13 @@ import (
 	"sync"
 	"time"
 
-	"peerInfoCollect/common/mclock"
-	"peerInfoCollect/event"
-	"peerInfoCollect/log"
-	"peerInfoCollect/metrics"
-	"peerInfoCollect/p2p/enode"
-	"peerInfoCollect/p2p/enr"
-	"peerInfoCollect/rlp"
+	"github.com/ethereum/go-ethereum/common/mclock"
+	"github.com/ethereum/go-ethereum/event"
+	"github.com/ethereum/go-ethereum/log"
+	"github.com/ethereum/go-ethereum/metrics"
+	"github.com/ethereum/go-ethereum/p2p/enode"
+	"github.com/ethereum/go-ethereum/p2p/enr"
+	"github.com/ethereum/go-ethereum/rlp"
 )
 
 var (

@@ -20,7 +20,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"peerInfoCollect/rlp"
+	"github.com/ethereum/go-ethereum/rlp"
 )
 
 func ExampleEncoderBuffer() {

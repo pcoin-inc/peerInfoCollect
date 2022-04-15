@@ -29,16 +29,16 @@ import (
 	"sync/atomic"
 	"time"
 
-	"peerInfoCollect/common"
-	"peerInfoCollect/common/mclock"
-	"peerInfoCollect/crypto"
-	"peerInfoCollect/event"
-	"peerInfoCollect/log"
-	"peerInfoCollect/p2p/discover"
-	"peerInfoCollect/p2p/enode"
-	"peerInfoCollect/p2p/enr"
-	"peerInfoCollect/p2p/nat"
-	"peerInfoCollect/p2p/netutil"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/mclock"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/event"
+	"github.com/ethereum/go-ethereum/log"
+	"github.com/ethereum/go-ethereum/p2p/discover"
+	"github.com/ethereum/go-ethereum/p2p/enode"
+	"github.com/ethereum/go-ethereum/p2p/enr"
+	"github.com/ethereum/go-ethereum/p2p/nat"
+	"github.com/ethereum/go-ethereum/p2p/netutil"
 )
 
 const (

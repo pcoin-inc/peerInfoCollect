@@ -20,7 +20,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"peerInfoCollect/common"
+	"github.com/ethereum/go-ethereum/common"
 )
 
 const (

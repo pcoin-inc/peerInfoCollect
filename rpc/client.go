@@ -27,7 +27,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"peerInfoCollect/log"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (
@@ -175,6 +175,8 @@ func DialContext(ctx context.Context, rawurl string) (*Client, error) {
 	switch u.Scheme {
 	case "http", "https":
 		return DialHTTP(rawurl)
+	case "ws", "wss":
+		return DialWebsocket(ctx, rawurl, "")
 	case "stdio":
 		return DialStdIO(ctx)
 	case "":

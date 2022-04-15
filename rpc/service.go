@@ -26,7 +26,7 @@ import (
 	"sync"
 	"unicode"
 
-	"peerInfoCollect/log"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 var (

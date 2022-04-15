@@ -2,7 +2,7 @@
 
 package test
 
-import "peerInfoCollect/rlp"
+import "github.com/ethereum/go-ethereum/rlp"
 
 type Test struct {
 	RawValue          rlp.RawValue

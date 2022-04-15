@@ -25,7 +25,7 @@ import (
 	"sort"
 	"time"
 
-	"peerInfoCollect/log"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 const (

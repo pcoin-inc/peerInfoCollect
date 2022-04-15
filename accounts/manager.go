@@ -1,10 +1,28 @@
+// Copyright 2017 The go-ethereum Authors
+// This file is part of the go-ethereum library.
+//
+// The go-ethereum library is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// The go-ethereum library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+
 package accounts
 
 import (
-	"sync"
 	"reflect"
 	"sort"
-	"peerInfoCollect/event"
+	"sync"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/event"
 )
 
 // managerSubBufferSize determines how many incoming wallet events
@@ -78,6 +96,25 @@ func NewManager(config *Config, backends ...Backend) *Manager {
 	return am
 }
 
+// Close terminates the account manager's internal notification processes.
+func (am *Manager) Close() error {
+	errc := make(chan error)
+	am.quit <- errc
+	return <-errc
+}
+
+// Config returns the configuration of account manager.
+func (am *Manager) Config() *Config {
+	return am.config
+}
+
+// AddBackend starts the tracking of an additional backend for wallet updates.
+// cmd/geth assumes once this func returns the backends have been already integrated.
+func (am *Manager) AddBackend(backend Backend) {
+	done := make(chan struct{})
+	am.newBackends <- newBackendEvent{backend, done}
+	<-done
+}
 
 // update is the wallet event loop listening for notifications from the backends
 // and updating the cache of wallets.
@@ -101,8 +138,8 @@ func (am *Manager) update() {
 			switch event.Kind {
 			case WalletArrived:
 				am.wallets = merge(am.wallets, event.Wallet)
-			//case WalletDropped:
-			//	am.wallets = drop(am.wallets, event.Wallet)
+			case WalletDropped:
+				am.wallets = drop(am.wallets, event.Wallet)
 			}
 			am.lock.Unlock()
 
@@ -129,6 +166,14 @@ func (am *Manager) update() {
 	}
 }
 
+// Backends retrieves the backend(s) with the given type from the account manager.
+func (am *Manager) Backends(kind reflect.Type) []Backend {
+	am.lock.RLock()
+	defer am.lock.RUnlock()
+
+	return am.backends[kind]
+}
+
 // Wallets returns all signer accounts registered under this account manager.
 func (am *Manager) Wallets() []Wallet {
 	am.lock.RLock()
@@ -142,6 +187,58 @@ func (am *Manager) walletsNoLock() []Wallet {
 	cpy := make([]Wallet, len(am.wallets))
 	copy(cpy, am.wallets)
 	return cpy
+}
+
+// Wallet retrieves the wallet associated with a particular URL.
+func (am *Manager) Wallet(url string) (Wallet, error) {
+	am.lock.RLock()
+	defer am.lock.RUnlock()
+
+	parsed, err := parseURL(url)
+	if err != nil {
+		return nil, err
+	}
+	for _, wallet := range am.walletsNoLock() {
+		if wallet.URL() == parsed {
+			return wallet, nil
+		}
+	}
+	return nil, ErrUnknownWallet
+}
+
+// Accounts returns all account addresses of all wallets within the account manager
+func (am *Manager) Accounts() []common.Address {
+	am.lock.RLock()
+	defer am.lock.RUnlock()
+
+	addresses := make([]common.Address, 0) // return [] instead of nil if empty
+	for _, wallet := range am.wallets {
+		for _, account := range wallet.Accounts() {
+			addresses = append(addresses, account.Address)
+		}
+	}
+	return addresses
+}
+
+// Find attempts to locate the wallet corresponding to a specific account. Since
+// accounts can be dynamically added to and removed from wallets, this method has
+// a linear runtime in the number of wallets.
+func (am *Manager) Find(account Account) (Wallet, error) {
+	am.lock.RLock()
+	defer am.lock.RUnlock()
+
+	for _, wallet := range am.wallets {
+		if wallet.Contains(account) {
+			return wallet, nil
+		}
+	}
+	return nil, ErrUnknownAccount
+}
+
+// Subscribe creates an async subscription to receive notifications when the
+// manager detects the arrival or departure of a wallet from any of its backends.
+func (am *Manager) Subscribe(sink chan<- WalletEvent) event.Subscription {
+	return am.feed.Subscribe(sink)
 }
 
 // merge is a sorted analogue of append for wallets, where the ordering of the
@@ -160,18 +257,16 @@ func merge(slice []Wallet, wallets ...Wallet) []Wallet {
 	return slice
 }
 
-// AddBackend starts the tracking of an additional backend for wallet updates.
-// cmd/geth assumes once this func returns the backends have been already integrated.
-func (am *Manager) AddBackend(backend Backend) {
-	done := make(chan struct{})
-	am.newBackends <- newBackendEvent{backend, done}
-	<-done
-}
-
-// Backends retrieves the backend(s) with the given type from the account manager.
-func (am *Manager) Backends(kind reflect.Type) []Backend {
-	am.lock.RLock()
-	defer am.lock.RUnlock()
-
-	return am.backends[kind]
+// drop is the couterpart of merge, which looks up wallets from within the sorted
+// cache and removes the ones specified.
+func drop(slice []Wallet, wallets ...Wallet) []Wallet {
+	for _, wallet := range wallets {
+		n := sort.Search(len(slice), func(i int) bool { return slice[i].URL().Cmp(wallet.URL()) >= 0 })
+		if n == len(slice) {
+			// Wallet not found, may happen during startup
+			continue
+		}
+		slice = append(slice[:n], slice[n+1:]...)
+	}
+	return slice
 }

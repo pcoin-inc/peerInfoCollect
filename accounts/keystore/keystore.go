@@ -24,6 +24,7 @@ import (
 	"crypto/ecdsa"
 	crand "crypto/rand"
 	"errors"
+	"math/big"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -31,11 +32,11 @@ import (
 	"sync"
 	"time"
 
-	"peerInfoCollect/accounts"
-	"peerInfoCollect/common"
-	//"peerInfoCollect/core/types"
-	"peerInfoCollect/crypto"
-	"peerInfoCollect/event"
+	"github.com/ethereum/go-ethereum/accounts"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/event"
 )
 
 var (
@@ -65,8 +66,8 @@ type KeyStore struct {
 	unlocked map[common.Address]*unlocked // Currently unlocked account (decrypted private keys)
 
 	wallets     []accounts.Wallet       // Wallet wrappers around the individual key files
-	//updateFeed  event.Feed              // Event feed to notify wallet additions/removals
-	//updateScope event.SubscriptionScope // Subscription scope tracking current live listeners
+	updateFeed  event.Feed              // Event feed to notify wallet additions/removals
+	updateScope event.SubscriptionScope // Subscription scope tracking current live listeners
 	updating    bool                    // Whether the event notification loop is running
 
 	mu       sync.RWMutex
@@ -122,7 +123,7 @@ func (ks *KeyStore) init(keydir string) {
 // keystore directory.
 func (ks *KeyStore) Wallets() []accounts.Wallet {
 	// Make sure the list of wallets is in sync with the account cache
-	//ks.refreshWallets()
+	ks.refreshWallets()
 
 	ks.mu.RLock()
 	defer ks.mu.RUnlock()
@@ -132,53 +133,53 @@ func (ks *KeyStore) Wallets() []accounts.Wallet {
 	return cpy
 }
 
-//// refreshWallets retrieves the current account list and based on that does any
-//// necessary wallet refreshes.
-//func (ks *KeyStore) refreshWallets() {
-//	// Retrieve the current list of accounts
-//	ks.mu.Lock()
-//	accs := ks.cache.accounts()
-//
-//	// Transform the current list of wallets into the new one
-//	var (
-//		wallets = make([]accounts.Wallet, 0, len(accs))
-//		events  []accounts.WalletEvent
-//	)
-//
-//	for _, account := range accs {
-//		// Drop wallets while they were in front of the next account
-//		for len(ks.wallets) > 0 && ks.wallets[0].URL().Cmp(account.URL) < 0 {
-//			events = append(events, accounts.WalletEvent{Wallet: ks.wallets[0], Kind: accounts.WalletDropped})
-//			ks.wallets = ks.wallets[1:]
-//		}
-//		// If there are no more wallets or the account is before the next, wrap new wallet
-//		if len(ks.wallets) == 0 || ks.wallets[0].URL().Cmp(account.URL) > 0 {
-//			wallet := &keystoreWallet{account: account, keystore: ks}
-//
-//			events = append(events, accounts.WalletEvent{Wallet: wallet, Kind: accounts.WalletArrived})
-//			wallets = append(wallets, wallet)
-//			continue
-//		}
-//		// If the account is the same as the first wallet, keep it
-//		if ks.wallets[0].Accounts()[0] == account {
-//			wallets = append(wallets, ks.wallets[0])
-//			ks.wallets = ks.wallets[1:]
-//			continue
-//		}
-//	}
-//	// Drop any leftover wallets and set the new batch
-//	for _, wallet := range ks.wallets {
-//		events = append(events, accounts.WalletEvent{Wallet: wallet, Kind: accounts.WalletDropped})
-//	}
-//	ks.wallets = wallets
-//	ks.mu.Unlock()
-//
-//	// Fire all wallet events and return
-//	for _, event := range events {
-//		ks.updateFeed.Send(event)
-//	}
-//}
-//
+// refreshWallets retrieves the current account list and based on that does any
+// necessary wallet refreshes.
+func (ks *KeyStore) refreshWallets() {
+	// Retrieve the current list of accounts
+	ks.mu.Lock()
+	accs := ks.cache.accounts()
+
+	// Transform the current list of wallets into the new one
+	var (
+		wallets = make([]accounts.Wallet, 0, len(accs))
+		events  []accounts.WalletEvent
+	)
+
+	for _, account := range accs {
+		// Drop wallets while they were in front of the next account
+		for len(ks.wallets) > 0 && ks.wallets[0].URL().Cmp(account.URL) < 0 {
+			events = append(events, accounts.WalletEvent{Wallet: ks.wallets[0], Kind: accounts.WalletDropped})
+			ks.wallets = ks.wallets[1:]
+		}
+		// If there are no more wallets or the account is before the next, wrap new wallet
+		if len(ks.wallets) == 0 || ks.wallets[0].URL().Cmp(account.URL) > 0 {
+			wallet := &keystoreWallet{account: account, keystore: ks}
+
+			events = append(events, accounts.WalletEvent{Wallet: wallet, Kind: accounts.WalletArrived})
+			wallets = append(wallets, wallet)
+			continue
+		}
+		// If the account is the same as the first wallet, keep it
+		if ks.wallets[0].Accounts()[0] == account {
+			wallets = append(wallets, ks.wallets[0])
+			ks.wallets = ks.wallets[1:]
+			continue
+		}
+	}
+	// Drop any leftover wallets and set the new batch
+	for _, wallet := range ks.wallets {
+		events = append(events, accounts.WalletEvent{Wallet: wallet, Kind: accounts.WalletDropped})
+	}
+	ks.wallets = wallets
+	ks.mu.Unlock()
+
+	// Fire all wallet events and return
+	for _, event := range events {
+		ks.updateFeed.Send(event)
+	}
+}
+
 // Subscribe implements accounts.Backend, creating an async subscription to
 // receive notifications on the addition or removal of keystore wallets.
 func (ks *KeyStore) Subscribe(sink chan<- accounts.WalletEvent) event.Subscription {
@@ -186,15 +187,15 @@ func (ks *KeyStore) Subscribe(sink chan<- accounts.WalletEvent) event.Subscripti
 	ks.mu.Lock()
 	defer ks.mu.Unlock()
 
-	//// Subscribe the caller and track the subscriber count
-	//sub := ks.updateScope.Track(ks.updateFeed.Subscribe(sink))
-	//
-	//// Subscribers require an active notification loop, start it
-	//if !ks.updating {
-	//	ks.updating = true
-	//	go ks.updater()
-	//}
-	return nil
+	// Subscribe the caller and track the subscriber count
+	sub := ks.updateScope.Track(ks.updateFeed.Subscribe(sink))
+
+	// Subscribers require an active notification loop, start it
+	if !ks.updating {
+		ks.updating = true
+		go ks.updater()
+	}
+	return sub
 }
 
 // updater is responsible for maintaining an up-to-date list of wallets stored in
@@ -210,15 +211,15 @@ func (ks *KeyStore) updater() {
 		case <-time.After(walletRefreshCycle):
 		}
 		// Run the wallet refresher
-		//ks.refreshWallets()
+		ks.refreshWallets()
 
 		// If all our subscribers left, stop the updater
 		ks.mu.Lock()
-		//if ks.updateScope.Count() == 0 {
-		//	ks.updating = false
-		//	ks.mu.Unlock()
-		//	return
-		//}
+		if ks.updateScope.Count() == 0 {
+			ks.updating = false
+			ks.mu.Unlock()
+			return
+		}
 		ks.mu.Unlock()
 	}
 }
@@ -252,7 +253,7 @@ func (ks *KeyStore) Delete(a accounts.Account, passphrase string) error {
 	err = os.Remove(a.URL.Path)
 	if err == nil {
 		ks.cache.delete(a)
-		//ks.refreshWallets()
+		ks.refreshWallets()
 	}
 	return err
 }
@@ -272,7 +273,20 @@ func (ks *KeyStore) SignHash(a accounts.Account, hash []byte) ([]byte, error) {
 	return crypto.Sign(hash, unlockedKey.PrivateKey)
 }
 
+// SignTx signs the given transaction with the requested account.
+func (ks *KeyStore) SignTx(a accounts.Account, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) {
+	// Look up the key to sign with and abort if it cannot be found
+	ks.mu.RLock()
+	defer ks.mu.RUnlock()
 
+	unlockedKey, found := ks.unlocked[a.Address]
+	if !found {
+		return nil, ErrLocked
+	}
+	// Depending on the presence of the chain ID, sign with 2718 or homestead
+	signer := types.LatestSignerForChainID(chainID)
+	return types.SignTx(tx, signer, unlockedKey.PrivateKey)
+}
 
 // SignHashWithPassphrase signs hash if the private key matching the given address
 // can be decrypted with the given passphrase. The produced signature is in the
@@ -286,6 +300,18 @@ func (ks *KeyStore) SignHashWithPassphrase(a accounts.Account, passphrase string
 	return crypto.Sign(hash, key.PrivateKey)
 }
 
+// SignTxWithPassphrase signs the transaction if the private key matching the
+// given address can be decrypted with the given passphrase.
+func (ks *KeyStore) SignTxWithPassphrase(a accounts.Account, passphrase string, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) {
+	_, key, err := ks.getDecryptedKey(a, passphrase)
+	if err != nil {
+		return nil, err
+	}
+	defer zeroKey(key.PrivateKey)
+	// Depending on the presence of the chain ID, sign with or without replay protection.
+	signer := types.LatestSignerForChainID(chainID)
+	return types.SignTx(tx, signer, key.PrivateKey)
+}
 
 // Unlock unlocks the given account indefinitely.
 func (ks *KeyStore) Unlock(a accounts.Account, passphrase string) error {
@@ -388,7 +414,7 @@ func (ks *KeyStore) NewAccount(passphrase string) (accounts.Account, error) {
 	// Add the account to the cache immediately rather
 	// than waiting for file system notifications to pick it up.
 	ks.cache.add(account)
-	//ks.refreshWallets()
+	ks.refreshWallets()
 	return account, nil
 }
 
@@ -447,7 +473,7 @@ func (ks *KeyStore) importKey(key *Key, passphrase string) (accounts.Account, er
 		return accounts.Account{}, err
 	}
 	ks.cache.add(a)
-	//ks.refreshWallets()
+	ks.refreshWallets()
 	return a, nil
 }
 
@@ -468,7 +494,7 @@ func (ks *KeyStore) ImportPreSaleKey(keyJSON []byte, passphrase string) (account
 		return a, err
 	}
 	ks.cache.add(a)
-	//ks.refreshWallets()
+	ks.refreshWallets()
 	return a, nil
 }
 
