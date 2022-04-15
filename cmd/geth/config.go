@@ -30,7 +30,6 @@ import (
 	"peerInfoCollect/accounts/external"
 	"peerInfoCollect/accounts/keystore"
 	"peerInfoCollect/cmd/utils"
-	"peerInfoCollect/core/rawdb"
 	"peerInfoCollect/eth/ethconfig"
 	"peerInfoCollect/internal/ethapi"
 	"peerInfoCollect/log"
@@ -162,19 +161,12 @@ func makeFullNode(ctx *cli.Context) (*node.Node, ethapi.Backend) {
 	backend, eth := utils.RegisterEthService(stack, &cfg.Eth)
 	// Warn users to migrate if they have a legacy freezer format.
 	if eth != nil {
-		firstIdx := uint64(0)
 		// Hack to speed up check for mainnet because we know
 		// the first non-empty block.
-		ghash := rawdb.ReadCanonicalHash(eth.ChainDb(), 0)
-		if cfg.Eth.NetworkId == 1 && ghash == params.MainnetGenesisHash {
-			firstIdx = 46147
-		}
-		isLegacy, _, err := dbHasLegacyReceipts(eth.ChainDb(), firstIdx)
-		if err != nil {
-			log.Error("Failed to check db for legacy receipts", "err", err)
-		} else if isLegacy {
-			log.Warn("Database has receipts with a legacy format. Please run `geth db freezer-migrate`.")
-		}
+		//ghash := rawdb.ReadCanonicalHash(eth.ChainDb(), 0)
+		//if cfg.Eth.NetworkId == 1 && ghash == params.MainnetGenesisHash {
+		//	firstIdx = 46147
+		//}
 	}
 
 	// Add the Ethereum Stats daemon if requested.

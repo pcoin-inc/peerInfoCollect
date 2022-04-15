@@ -31,7 +31,6 @@ import (
 	"peerInfoCollect/common"
 	"peerInfoCollect/console/prompt"
 	"peerInfoCollect/eth/downloader"
-	"peerInfoCollect/ethclient"
 	"peerInfoCollect/internal/debug"
 	"peerInfoCollect/internal/ethapi"
 	"peerInfoCollect/internal/flags"
@@ -182,15 +181,11 @@ func init() {
 		importCommand,
 		importPreimagesCommand,
 		exportPreimagesCommand,
-		removedbCommand,
 		dumpCommand,
 		dumpGenesisCommand,
 		// See accountcmd.go:
 		accountCommand,
 		walletCommand,
-		// See consolecmd.go:
-		consoleCommand,
-		attachCommand,
 		// See misccmd.go:
 		makecacheCommand,
 		makedagCommand,
@@ -199,8 +194,6 @@ func init() {
 		licenseCommand,
 		// See config.go
 		dumpConfigCommand,
-		// see dbcmd.go
-		dbCommand,
 		// See snapshot.go
 		snapshotCommand,
 	}
@@ -208,7 +201,6 @@ func init() {
 
 	app.Flags = append(app.Flags, nodeFlags...)
 	app.Flags = append(app.Flags, rpcFlags...)
-	app.Flags = append(app.Flags, consoleFlags...)
 	app.Flags = append(app.Flags, debug.Flags...)
 	app.Flags = append(app.Flags, metricsFlags...)
 
@@ -301,12 +293,6 @@ func startNode(ctx *cli.Context, stack *node.Node, backend ethapi.Backend, isCon
 	events := make(chan accounts.WalletEvent, 16)
 	stack.AccountManager().Subscribe(events)
 
-	// Create a client to interact with local geth node.
-	rpcClient, err := stack.Attach()
-	if err != nil {
-		utils.Fatalf("Failed to attach to self: %v", err)
-	}
-	ethClient := ethclient.NewClient(rpcClient)
 
 	go func() {
 		// Open any wallets already attached
@@ -332,7 +318,7 @@ func startNode(ctx *cli.Context, stack *node.Node, backend ethapi.Backend, isCon
 				}
 				derivationPaths = append(derivationPaths, accounts.DefaultBaseDerivationPath)
 
-				event.Wallet.SelfDerive(derivationPaths, ethClient)
+				event.Wallet.SelfDerive(derivationPaths, nil)
 
 			case accounts.WalletDropped:
 				log.Info("Old wallet dropped", "url", event.Wallet.URL())
