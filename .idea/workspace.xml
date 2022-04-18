@@ -3,22 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="941b18a2-d12a-437e-9e25-7dc15a8a930c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/bin/geth" beforeDir="false" afterPath="$PROJECT_DIR$/build/bin/geth" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/utils/flags.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/utils/flags.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eth/backend.go" beforeDir="false" afterPath="$PROJECT_DIR$/eth/backend.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/ethapi/backend.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/ethapi/backend.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/guide/guide.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/guide/guide_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/jsre/completion.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/jsre/completion_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/jsre/deps/bignumber.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/jsre/deps/bindata.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/jsre/deps/deps.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/jsre/deps/web3.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/jsre/jsre.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/jsre/jsre_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/jsre/pretty.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/web3ext/web3ext.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/signer/core/cliui.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/signer/core/stdioui.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/signer/core/uiapi.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/signer/rules/rules.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/signer/rules/rules_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/signer/storage/aes_gcm_storage.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/signer/storage/aes_gcm_storage_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/signer/storage/storage.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
