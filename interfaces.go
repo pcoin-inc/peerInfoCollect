@@ -79,10 +79,6 @@ type TransactionReader interface {
 	// mined yet. Note that the transaction may not be part of the canonical chain even if
 	// it's not pending.
 	TransactionByHash(ctx context.Context, txHash common.Hash) (tx *types.Transaction, isPending bool, err error)
-	// TransactionReceipt returns the receipt of a mined transaction. Note that the
-	// transaction may not be included in the current canonical chain even if a receipt
-	// exists.
-	TransactionReceipt(ctx context.Context, txHash common.Hash) (*types.Receipt, error)
 }
 
 // ChainStateReader wraps access to the state trie of the canonical blockchain. Note that
