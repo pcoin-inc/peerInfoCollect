@@ -65,10 +65,6 @@ It expects the genesis file as argument.`,
 		ArgsUsage: "",
 		Flags: []cli.Flag{
 			utils.MainnetFlag,
-			utils.RopstenFlag,
-			utils.SepoliaFlag,
-			utils.RinkebyFlag,
-			utils.GoerliFlag,
 		},
 		Category: "BLOCKCHAIN COMMANDS",
 		Description: `
@@ -272,10 +268,6 @@ func importChain(ctx *cli.Context) error {
 	fmt.Printf("System memory: %.3f MB current, %.3f MB peak\n", float64(mem.Sys)/1024/1024, float64(atomic.LoadUint64(&peakMemSys))/1024/1024)
 	fmt.Printf("Allocations:   %.3f million\n", float64(mem.Mallocs)/1000000)
 	fmt.Printf("GC pause:      %v\n\n", time.Duration(mem.PauseTotalNs))
-
-	if ctx.GlobalBool(utils.NoCompactionFlag.Name) {
-		return nil
-	}
 
 	// Compact the entire database to more accurately measure disk io and print the stats
 	start = time.Now()

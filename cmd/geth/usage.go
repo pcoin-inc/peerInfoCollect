@@ -22,10 +22,9 @@ import (
 	"io"
 	"sort"
 
-	"peerInfoCollect/cmd/utils"
-	"peerInfoCollect/internal/debug"
-	"peerInfoCollect/internal/flags"
 	"gopkg.in/urfave/cli.v1"
+	"peerInfoCollect/cmd/utils"
+	"peerInfoCollect/internal/flags"
 )
 
 // AppHelpFlagGroups is the application flags, grouped by functionality.
@@ -38,10 +37,6 @@ var AppHelpFlagGroups = []flags.FlagGroup{
 			utils.KeyStoreDirFlag,
 			utils.NetworkIdFlag,
 			utils.MainnetFlag,
-			utils.GoerliFlag,
-			utils.RinkebyFlag,
-			utils.RopstenFlag,
-			utils.SepoliaFlag,
 			utils.SyncModeFlag,
 			utils.ExitWhenSyncedFlag,
 			utils.GCModeFlag,
@@ -153,19 +148,6 @@ var AppHelpFlagGroups = []flags.FlagGroup{
 			utils.GpoMaxGasPriceFlag,
 			utils.GpoIgnoreGasPriceFlag,
 		},
-	},
-	{
-		Name: "VIRTUAL MACHINE",
-		Flags: []cli.Flag{
-			utils.VMEnableDebugFlag,
-		},
-	},
-	{
-		Name: "LOGGING AND DEBUGGING",
-		Flags: append([]cli.Flag{
-			utils.FakePoWFlag,
-			utils.NoCompactionFlag,
-		}, debug.Flags...),
 	},
 	{
 		Name:  "METRICS AND STATS",

@@ -3,15 +3,19 @@
   <component name="ChangeListManager">
     <list default="true" id="941b18a2-d12a-437e-9e25-7dc15a8a930c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/abi/bind/auth.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/abi/bind/backends/simulated.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/abi/bind/backends/simulated_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/abi/bind/util.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/abi/bind/util_test.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/bin/geth" beforeDir="false" afterPath="$PROJECT_DIR$/build/bin/geth" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/ci.go" beforeDir="false" afterPath="$PROJECT_DIR$/build/ci.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interfaces.go" beforeDir="false" afterPath="$PROJECT_DIR$/interfaces.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/build/azure.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/geth/chaincmd.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/geth/chaincmd.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/geth/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/geth/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/geth/snapshot.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/geth/snapshot.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/geth/usage.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/geth/usage.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/utils/flags.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/utils/flags.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/console/bridge.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console/bridge_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console/console.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console/console_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console/testdata/exec.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console/testdata/preload.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/cmdtest/test_cmd.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
