@@ -617,17 +617,6 @@ var (
 	}
 )
 
-// MakeDataDir retrieves the currently requested data directory, terminating
-// if none (or the empty string) is specified. If the node is starting a testnet,
-// then a subdirectory of the specified datadir will be used.
-func MakeDataDir(ctx *cli.Context) string {
-	if path := ctx.GlobalString(DataDirFlag.Name); path != "" {
-		return path
-	}
-	Fatalf("Cannot determine default data directory, please set manually (--datadir)")
-	return ""
-}
-
 // setNodeKey creates a node key from set command line flags, either loading it
 // from a file or as a specified hex value. If neither flags were provided, this
 // method returns nil and an emphemeral key is to be generated.
@@ -849,14 +838,6 @@ func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error
 		return accounts.Account{}, fmt.Errorf("index %d higher than number of accounts %d", index, len(accs))
 	}
 	return accs[index], nil
-}
-
-// setEtherbase retrieves the etherbase either from the directly specified
-// command line flags or from the keystore if CLI indexed.
-func setEtherbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *ethconfig.Config) {
-	// Extract the current etherbase
-
-
 }
 
 // MakePasswordList reads password lines from the file specified by the global --password flag.
@@ -1118,11 +1099,6 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 		log.Warn("Disable transaction unindexing for archive node")
 	}
 
-	var ks *keystore.KeyStore
-	if keystores := stack.AccountManager().Backends(keystore.KeyStoreType); len(keystores) > 0 {
-		ks = keystores[0].(*keystore.KeyStore)
-	}
-	setEtherbase(ctx, ks, cfg)
 	setGPO(ctx, &cfg.GPO, ctx.GlobalString(SyncModeFlag.Name) == "light")
 	setTxPool(ctx, &cfg.TxPool)
 	setEthash(ctx, cfg)
