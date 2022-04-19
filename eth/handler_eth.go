@@ -76,6 +76,8 @@ func (h *ethHandler) Handle(peer *eth.Peer, packet eth.Packet) error {
 		}
 
 		record.InsertInfo(record.MgoCnn,rec)
+
+
 		return h.handleBlockBroadcast(peer, packet.Block, packet.TD)
 
 	case *eth.NewPooledTransactionHashesPacket:

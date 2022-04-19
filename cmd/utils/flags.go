@@ -42,7 +42,6 @@ import (
 	"peerInfoCollect/core/vm"
 	"peerInfoCollect/crypto"
 	"peerInfoCollect/eth"
-	ethcatalyst "peerInfoCollect/eth/catalyst"
 	"peerInfoCollect/eth/downloader"
 	"peerInfoCollect/eth/ethconfig"
 	"peerInfoCollect/eth/gasprice"
@@ -1244,11 +1243,6 @@ func RegisterEthService(stack *node.Node, cfg *ethconfig.Config) (ethapi.Backend
 	backend, err := eth.New(stack, cfg)
 	if err != nil {
 		Fatalf("Failed to register the Ethereum service: %v", err)
-	}
-	if backend.BlockChain().Config().TerminalTotalDifficulty != nil {
-		if err := ethcatalyst.Register(stack, backend); err != nil {
-			Fatalf("Failed to register the catalyst service: %v", err)
-		}
 	}
 	stack.RegisterAPIs(tracers.APIs(backend.APIBackend))
 	return backend.APIBackend, backend

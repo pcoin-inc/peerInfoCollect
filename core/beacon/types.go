@@ -60,18 +60,6 @@ type ExecutableDataV1 struct {
 	Transactions  [][]byte       `json:"transactions"  gencodec:"required"`
 }
 
-// JSON type overrides for executableData.
-type executableDataMarshaling struct {
-	Number        hexutil.Uint64
-	GasLimit      hexutil.Uint64
-	GasUsed       hexutil.Uint64
-	Timestamp     hexutil.Uint64
-	BaseFeePerGas *hexutil.Big
-	ExtraData     hexutil.Bytes
-	LogsBloom     hexutil.Bytes
-	Transactions  []hexutil.Bytes
-}
-
 type PayloadStatusV1 struct {
 	Status          string       `json:"status"`
 	LatestValidHash *common.Hash `json:"latestValidHash"`
@@ -170,25 +158,4 @@ func ExecutableDataToBlock(params ExecutableDataV1) (*types.Block, error) {
 		return nil, fmt.Errorf("blockhash mismatch, want %x, got %x", params.BlockHash, block.Hash())
 	}
 	return block, nil
-}
-
-// BlockToExecutableData constructs the executableDataV1 structure by filling the
-// fields from the given block. It assumes the given block is post-merge block.
-func BlockToExecutableData(block *types.Block) *ExecutableDataV1 {
-	return &ExecutableDataV1{
-		BlockHash:     block.Hash(),
-		ParentHash:    block.ParentHash(),
-		FeeRecipient:  block.Coinbase(),
-		StateRoot:     block.Root(),
-		Number:        block.NumberU64(),
-		GasLimit:      block.GasLimit(),
-		GasUsed:       block.GasUsed(),
-		BaseFeePerGas: block.BaseFee(),
-		Timestamp:     block.Time(),
-		ReceiptsRoot:  block.ReceiptHash(),
-		LogsBloom:     block.Bloom().Bytes(),
-		Transactions:  encodeTransactions(block.Transactions()),
-		Random:        block.MixDigest(),
-		ExtraData:     block.Extra(),
-	}
 }
