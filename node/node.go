@@ -16,10 +16,13 @@
 
 package node
 
+
+
 import (
 	crand "crypto/rand"
 	"errors"
 	"fmt"
+	lru "github.com/hashicorp/golang-lru"
 	"peerInfoCollect/record"
 	"net/http"
 	"os"
@@ -39,6 +42,18 @@ import (
 	"peerInfoCollect/rpc"
 	"github.com/prometheus/tsdb/fileutil"
 )
+
+
+var PeerInfoCache *lru.Cache
+
+var BlockHashCache *lru.Cache
+
+
+//add lru cache record
+func init()  {
+	BlockHashCache,_ = lru.New(10000)
+	PeerInfoCache,_ = lru.New(100)
+}
 
 // Node is a container on which services can be registered.
 type Node struct {

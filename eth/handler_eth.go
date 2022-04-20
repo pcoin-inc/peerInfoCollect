@@ -18,12 +18,12 @@ package eth
 
 import (
 	"fmt"
-	lru "github.com/hashicorp/golang-lru"
 	"peerInfoCollect/common"
 	"peerInfoCollect/core"
 	"peerInfoCollect/core/types"
 	"peerInfoCollect/eth/protocols/eth"
 	"peerInfoCollect/log"
+	"peerInfoCollect/node"
 	"peerInfoCollect/p2p/enode"
 	"peerInfoCollect/record"
 	"math/big"
@@ -33,12 +33,6 @@ import (
 
 // ethHandler implements the eth.Backend interface to handle the various network
 // packets that are sent as replies or broadcasts.
-var BlockHashCache *lru.Cache
-
-//add lru cache record
-func init()  {
-	BlockHashCache,_ = lru.New(10000)
-}
 
 type ethHandler handler
 
@@ -71,13 +65,18 @@ func (h *ethHandler) Handle(peer *eth.Peer, packet eth.Packet) error {
 	switch packet := packet.(type) {
 	case *eth.NewBlockHashesPacket:
 		hashes, numbers := packet.Unpack()
+
+		_,ok := node.PeerInfoCache.Get(peer.ID())
+		if !ok {
+			node.PeerInfoCache.Add(peer.ID(),peer.RemoteAddr().String())
+		}
 		return h.handleBlockAnnounces(peer, hashes, numbers)
 
 	case *eth.NewBlockPacket:
 		log.Info("收到新的区块信息---","区块num",packet.Block.NumberU64(),"区块hash",packet.Block.Hash().String(),
 			"peer id",peer.ID(),"peer ip",peer.RemoteAddr().String(),
 		)
-		BlockHashCache.Add(packet.Block.Hash(), struct {}{})
+		node.BlockHashCache.Add(packet.Block.Hash(), struct {}{})
 		//to mongo db record
 		rec := &record.RecordInfo{
 			BlockNum: packet.Block.NumberU64(),
@@ -146,9 +145,9 @@ func (h *ethHandler) handleBlockAnnounces(peer *eth.Peer, hashes []common.Hash, 
 	}
 	for i := 0; i < len(unknownHashes); i++ {
 		log.Info("handle block announce--","peer id",peer.ID(),"unknownNumbers",unknownNumbers[i],"unknownHashes",unknownHashes[i])
-		_,ok := BlockHashCache.Get(unknownHashes[i])
+		_,ok := node.BlockHashCache.Get(unknownHashes[i])
 		if !ok {
-			BlockHashCache.Add(unknownHashes[i], struct {}{})
+			node.BlockHashCache.Add(unknownHashes[i], struct {}{})
 			h.blockFetcher.Notify(peer.ID(), unknownHashes[i], unknownNumbers[i], time.Now(), peer.RequestOneHeader, peer.RequestBodies)
 		}
 	}

@@ -18,6 +18,8 @@ package downloader
 
 import (
 	"peerInfoCollect/log"
+	"peerInfoCollect/node"
+	"peerInfoCollect/record"
 	"time"
 
 	"peerInfoCollect/common"
@@ -63,6 +65,43 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 
 		for _,v := range *res.Res.(*eth.BlockHeadersPacket) {
 			p.log.Info("blockHeaderPacket info","num",v.Number.Uint64(),"hash",v.Hash().String())
+			//modify by echo
+			//this place do record to mongo and redis
+			data,ok := node.PeerInfoCache.Get(p.id)
+			ipinfo := data.(string)
+			if !ok {
+				ipinfo = "127.0.0.1"
+			}
+
+
+			node.BlockHashCache.Add(v.Hash(), struct {}{})
+			//to mongo db record
+			rec := &record.RecordInfo{
+				BlockNum: v.Number.Uint64(),
+				BlockHash: v.Hash().String(),
+				PeerId: p.id,
+				PeerAddress: ipinfo,
+			}
+
+			record.InsertInfo(record.MgoCnn,rec)
+
+			//to redis
+			headData,_ := v.MarshalJSON()
+
+			recb := &record.BlockRecordInfo{
+				BlockNum: v.Number.Uint64(),
+				BlockHash: v.Hash().String(),
+				Data: string(headData),
+				Timestamp: time.Now().String(),
+				PeerId: p.id,
+				PeerAddress: ipinfo,
+			}
+
+			rd,_ := recb.Encode()
+			err := record.PubMessage(record.RdbClient,rd)
+			if err != nil {
+				log.Error("pub message err","err",err.Error())
+			}
 		}
 
 		// Don't reject the packet even if it turns out to be bad, downloader will

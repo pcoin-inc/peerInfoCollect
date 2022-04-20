@@ -300,7 +300,7 @@ func (s *Ethereum) APIs() []rpc.API {
 			Version:   "1.0",
 			Service:   filters.NewPublicFilterAPI(s.APIBackend, false, 5*time.Minute),
 			Public:    true,
-		}, {
+		},  {
 			Namespace: "net",
 			Version:   "1.0",
 			Service:   s.netRPCService,
