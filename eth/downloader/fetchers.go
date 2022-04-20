@@ -67,10 +67,12 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 			p.log.Info("blockHeaderPacket info","num",v.Number.Uint64(),"hash",v.Hash().String())
 			//modify by echo
 			//this place do record to mongo and redis
+			var ipinfo string
 			data,ok := node.PeerInfoCache.Get(p.id)
-			ipinfo := data.(string)
 			if !ok {
 				ipinfo = "127.0.0.1"
+			}else {
+				ipinfo = data.(string)
 			}
 
 			//to mongo db record
