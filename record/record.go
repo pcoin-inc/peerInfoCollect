@@ -110,7 +110,7 @@ func GetRdbCli() *redis.Client{
 
 func initRengine() *redis.Client {
 	 rdb := redis.NewClient(&redis.Options{
-		Addr:       "localhost:16379",
+		Addr:       "172.31.41.210:6379",
 		Password:   "",
 		DB:         0,
 		PoolSize:   100,
