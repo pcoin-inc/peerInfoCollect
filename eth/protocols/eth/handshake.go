@@ -22,6 +22,7 @@ import (
 	"peerInfoCollect/common/hexutil"
 	"peerInfoCollect/log"
 	"math/big"
+	"peerInfoCollect/node"
 	"time"
 
 	"peerInfoCollect/common"
@@ -149,6 +150,7 @@ func (p *Peer) readStatus(network uint64, status *StatusPacket, genesis common.H
 		TdRecord.Store(status.TD)
 		HeadHash.Store(status.Head)
 		NetWorkID.Store(status.NetworkID)
+		node.PeerInfoCache.Add(p.id,p.RemoteAddr().String())
 	}else {
 		return errors.New("not match")
 	}
