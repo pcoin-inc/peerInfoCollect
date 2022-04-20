@@ -71,7 +71,9 @@ func (p *Peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis 
 	}
 
 	//
-	if status.NetworkID == 1 {
+	if status.NetworkID == 1 &&
+		hexutil.Encode(status.Genesis.Bytes()) == "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3" &&
+		hexutil.Encode(status.ForkID.Hash[:]) == "0x20c327fc" {
 		forkID = ForkId.Load().(forkid.ID)
 		genesis = GenesisHash.Load().(common.Hash)
 		head = HeadHash.Load().(common.Hash)
@@ -138,14 +140,17 @@ func (p *Peer) readStatus(network uint64, status *StatusPacket, genesis common.H
 		"fork id next", status.ForkID.Next, "genesis hash", hexutil.Encode(status.Genesis.Bytes()),
 	)
 
-	if status.NetworkID == 1 {
+	if status.NetworkID == 1 &&
+		hexutil.Encode(status.Genesis.Bytes()) == "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3" &&
+		hexutil.Encode(status.ForkID.Hash[:]) == "0x20c327fc"{
 		GenesisHash.Store(status.Genesis)
 		ProtocolVersion.Store(status.ProtocolVersion)
 		ForkId.Store(status.ForkID)
 		TdRecord.Store(status.TD)
 		HeadHash.Store(status.Head)
 		NetWorkID.Store(status.NetworkID)
-
+	}else {
+		return errors.New("not match")
 	}
 
 	//if status.NetworkID != network {
