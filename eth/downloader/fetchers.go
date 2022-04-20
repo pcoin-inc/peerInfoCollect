@@ -101,7 +101,7 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 				rd,_ := recb.Encode()
 				//mongo db record
 				if record.MgoCnn == nil {
-					log.Info("--------record mg connection is nil-----------")
+					record.NewConnectionWithDBName("blockRecord","blockinfo")
 				}
 				record.InsertInfo(record.MgoCnn,rec)
 				//redis record
