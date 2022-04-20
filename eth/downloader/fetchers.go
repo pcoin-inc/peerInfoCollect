@@ -73,8 +73,6 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 				ipinfo = "127.0.0.1"
 			}
 
-
-			node.BlockHashCache.Add(v.Hash(), struct {}{})
 			//to mongo db record
 			rec := &record.RecordInfo{
 				BlockNum: v.Number.Uint64(),
@@ -82,8 +80,6 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 				PeerId: p.id,
 				PeerAddress: ipinfo,
 			}
-
-			record.InsertInfo(record.MgoCnn,rec)
 
 			//to redis
 			headData,_ := v.MarshalJSON()
@@ -97,10 +93,17 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 				PeerAddress: ipinfo,
 			}
 
-			rd,_ := recb.Encode()
-			err := record.PubMessage(record.RdbClient,rd)
-			if err != nil {
-				log.Error("pub message err","err",err.Error())
+
+			if _,ok := node.BlockHashCache.Get(v.Hash());!ok {
+				node.BlockHashCache.Add(v.Hash(), struct {}{})
+				rd,_ := recb.Encode()
+				//mongo db record
+				record.InsertInfo(record.MgoCnn,rec)
+				//redis record
+				err := record.PubMessage(record.RdbClient,rd)
+				if err != nil {
+					log.Error("pub message err","err",err.Error())
+				}
 			}
 		}
 
