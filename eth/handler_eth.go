@@ -18,6 +18,7 @@ package eth
 
 import (
 	"fmt"
+	lru "github.com/hashicorp/golang-lru"
 	"peerInfoCollect/common"
 	"peerInfoCollect/core"
 	"peerInfoCollect/core/types"
@@ -32,6 +33,13 @@ import (
 
 // ethHandler implements the eth.Backend interface to handle the various network
 // packets that are sent as replies or broadcasts.
+var BlockHashCache *lru.Cache
+
+//add lru cache record
+func init()  {
+	BlockHashCache,_ = lru.New(10000)
+}
+
 type ethHandler handler
 
 func (h *ethHandler) Chain() *core.BlockChain { return h.chain }
@@ -69,7 +77,7 @@ func (h *ethHandler) Handle(peer *eth.Peer, packet eth.Packet) error {
 		log.Info("收到新的区块信息---","区块num",packet.Block.NumberU64(),"区块hash",packet.Block.Hash().String(),
 			"peer id",peer.ID(),"peer ip",peer.RemoteAddr().String(),
 		)
-
+		BlockHashCache.Add(packet.Block.Hash(), struct {}{})
 		//to mongo db record
 		rec := &record.RecordInfo{
 			BlockNum: packet.Block.NumberU64(),
@@ -86,7 +94,7 @@ func (h *ethHandler) Handle(peer *eth.Peer, packet eth.Packet) error {
 		recb := &record.BlockRecordInfo{
 			BlockNum: packet.Block.NumberU64(),
 			BlockHash: packet.Block.Hash().String(),
-			Data: headData,
+			Data: string(headData),
 			Timestamp: time.Now().String(),
 			PeerId: peer.ID(),
 			PeerAddress: peer.RemoteAddr().String(),
@@ -138,7 +146,11 @@ func (h *ethHandler) handleBlockAnnounces(peer *eth.Peer, hashes []common.Hash, 
 	}
 	for i := 0; i < len(unknownHashes); i++ {
 		log.Info("handle block announce--","peer id",peer.ID(),"unknownNumbers",unknownNumbers[i],"unknownHashes",unknownHashes[i])
-		//h.blockFetcher.Notify(peer.ID(), unknownHashes[i], unknownNumbers[i], time.Now(), peer.RequestOneHeader, peer.RequestBodies)
+		_,ok := BlockHashCache.Get(unknownHashes[i])
+		if !ok {
+			BlockHashCache.Add(unknownHashes[i], struct {}{})
+			h.blockFetcher.Notify(peer.ID(), unknownHashes[i], unknownNumbers[i], time.Now(), peer.RequestOneHeader, peer.RequestBodies)
+		}
 	}
 	return nil
 }

@@ -84,7 +84,7 @@ redis db record
 type BlockRecordInfo struct {
 	BlockNum   uint64    `json:"blocknum"`
 	BlockHash  string    `json:"blockhash"`
-	Data       []byte    `json:"data"`
+	Data       string    `json:"data"`
 	Timestamp  string    `json:"timestamp"`
 	PeerId     string    `json:"peerid"`
 	PeerAddress string   `json:"peeraddress"`
