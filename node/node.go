@@ -29,7 +29,7 @@ import (
 	"sync"
 
 	"peerInfoCollect/accounts"
-	"peerInfoCollect/common"
+	//"peerInfoCollect/common"
 	"peerInfoCollect/common/hexutil"
 	"peerInfoCollect/core/rawdb"
 	"peerInfoCollect/ethdb"
@@ -357,14 +357,14 @@ func (n *Node) obtainJWTSecret(cliParam string) ([]byte, error) {
 	}
 	// try reading from file
 	log.Debug("Reading JWT secret", "path", fileName)
-	if data, err := os.ReadFile(fileName); err == nil {
-		jwtSecret := common.FromHex(strings.TrimSpace(string(data)))
-		if len(jwtSecret) == 32 {
-			return jwtSecret, nil
-		}
-		log.Error("Invalid JWT secret", "path", fileName, "length", len(jwtSecret))
-		return nil, errors.New("invalid JWT secret")
-	}
+// 	if data, err := os.ReadFile(fileName); err == nil {
+// 		jwtSecret := common.FromHex(strings.TrimSpace(string(data)))
+// 		if len(jwtSecret) == 32 {
+// 			return jwtSecret, nil
+// 		}
+// 		log.Error("Invalid JWT secret", "path", fileName, "length", len(jwtSecret))
+// 		return nil, errors.New("invalid JWT secret")
+// 	}
 	// Need to generate one
 	jwtSecret := make([]byte, 32)
 	crand.Read(jwtSecret)
@@ -373,9 +373,9 @@ func (n *Node) obtainJWTSecret(cliParam string) ([]byte, error) {
 		log.Info("Generated ephemeral JWT secret", "secret", hexutil.Encode(jwtSecret))
 		return jwtSecret, nil
 	}
-	if err := os.WriteFile(fileName, []byte(hexutil.Encode(jwtSecret)), 0600); err != nil {
-		return nil, err
-	}
+// 	if err := os.WriteFile(fileName, []byte(hexutil.Encode(jwtSecret)), 0600); err != nil {
+// 		return nil, err
+// 	}
 	log.Info("Generated JWT secret", "path", fileName)
 	return jwtSecret, nil
 }
