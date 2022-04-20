@@ -2,12 +2,21 @@ package record
 
 import (
 	"context"
-	"peerInfoCollect/log"
+	"encoding/json"
+	"github.com/go-redis/redis/v8"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"peerInfoCollect/log"
 )
 
+const (
+	ChanID  = "BlockInfo"
+)
+
+/**
+mongo db record
+**/
 type RecordInfo struct {
 	BlockNum   uint64  `bson:"blocknum"`//区块高度
 	BlockHash  string  `bson:"blockhash"`//区块hash
@@ -68,3 +77,53 @@ func FindInfoWithNumber(c *mongo.Collection,num uint64) (*RecordInfo,error) {
 	}
 	return &r,nil
 }
+
+/**
+redis db record
+**/
+type BlockRecordInfo struct {
+	BlockNum   uint64    `json:"blocknum"`
+	BlockHash  string    `json:"blockhash"`
+	Data       []byte    `json:"data"`
+	Timestamp  string    `json:"timestamp"`
+	PeerId     string    `json:"peerid"`
+	PeerAddress string   `json:"peeraddress"`
+}
+
+func(b *BlockRecordInfo) Encode() ([]byte,error) {
+	return json.Marshal(b)
+}
+
+func(b *BlockRecordInfo) Decode(data []byte) {
+	json.Unmarshal(data,b)
+}
+
+var RdbClient *redis.Client
+
+func GetRdbCli() *redis.Client{
+	if RdbClient == nil {
+		RdbClient = initRengine()
+		return RdbClient
+	}
+	return RdbClient
+}
+
+func initRengine() *redis.Client {
+	 rdb := redis.NewClient(&redis.Options{
+		Addr:       "localhost:16379",
+		Password:   "",
+		DB:         0,
+		PoolSize:   100,
+	})
+
+	return rdb
+}
+
+func PubMessage(client * redis.Client,msg []byte) error {
+	err := client.Publish(context.Background(),ChanID,msg).Err()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+

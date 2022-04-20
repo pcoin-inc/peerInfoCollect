@@ -2,7 +2,6 @@ package record
 
 import (
 	"context"
-	"peerInfoCollect/ethclient"
 	"go.mongodb.org/mongo-driver/mongo"
 	"testing"
 )
@@ -41,31 +40,4 @@ func TestCreateTable(t *testing.T) {
 	}
 
 	println("peer info",s.PeerAddress)
-}
-
-func TestFindInfoWithNumber(t *testing.T) {
-	client, err := ethclient.DialContext(context.TODO(), "http://65.108.120.57:30303")
-	if err != nil {
-		println("new client with peer err", err.Error())
-	}
-
-	id,err := client.ChainID(context.TODO())
-	if err != nil {
-		println("get chain id",err.Error())
-	}
-
-	if id != nil{
-		println("id",id.Uint64())
-	}
-
-	//hash := common.HexToHash("0x52bbecea52b15dc492147db62caa5b02e4d91c43949f7f8b34aa25f93588d894")
-	//
-	//block, err := client.BlockByHash(context.TODO(),hash)
-	//if err != nil {
-	//	println("get block by hash err", err.Error())
-	//}
-	//if block != nil{
-	//	println("block num",block.NumberU64())
-	//}
-
 }

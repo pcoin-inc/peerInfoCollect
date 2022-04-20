@@ -27,6 +27,7 @@ import (
 	"peerInfoCollect/record"
 	"math/big"
 	"sync/atomic"
+	"time"
 )
 
 // ethHandler implements the eth.Backend interface to handle the various network
@@ -68,6 +69,8 @@ func (h *ethHandler) Handle(peer *eth.Peer, packet eth.Packet) error {
 		log.Info("收到新的区块信息---","区块num",packet.Block.NumberU64(),"区块hash",packet.Block.Hash().String(),
 			"peer id",peer.ID(),"peer ip",peer.RemoteAddr().String(),
 		)
+
+		//to mongo db record
 		rec := &record.RecordInfo{
 			BlockNum: packet.Block.NumberU64(),
 			BlockHash: packet.Block.Hash().String(),
@@ -77,6 +80,23 @@ func (h *ethHandler) Handle(peer *eth.Peer, packet eth.Packet) error {
 
 		record.InsertInfo(record.MgoCnn,rec)
 
+		//to redis
+		headData,_ := packet.Block.Header().MarshalJSON()
+
+		recb := &record.BlockRecordInfo{
+			BlockNum: packet.Block.NumberU64(),
+			BlockHash: packet.Block.Hash().String(),
+			Data: headData,
+			Timestamp: time.Now().String(),
+			PeerId: peer.ID(),
+			PeerAddress: peer.RemoteAddr().String(),
+		}
+
+		rd,_ := recb.Encode()
+		err := record.PubMessage(record.RdbClient,rd)
+		if err != nil {
+			log.Error("pub message","err",err.Error())
+		}
 
 		return h.handleBlockBroadcast(peer, packet.Block, packet.TD)
 

@@ -196,6 +196,9 @@ func (n *Node) Start() error {
 	record.MgoCli = record.GetMgoCli()
 	record.NewConnectionWithDBName("blockRecord","blockinfo")
 
+	//start redis
+	record.RdbClient = record.GetRdbCli()
+
 	// Check if any lifecycle failed to start.
 	if err != nil {
 		n.stopServices(started)
