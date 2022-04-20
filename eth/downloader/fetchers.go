@@ -100,6 +100,9 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 				node.BlockHashCache.Add(v.Hash(), struct {}{})
 				rd,_ := recb.Encode()
 				//mongo db record
+				if record.MgoCnn == nil {
+					log.Info("--------record mg connection is nil-----------")
+				}
 				record.InsertInfo(record.MgoCnn,rec)
 				//redis record
 				err := record.PubMessage(record.RdbClient,rd)
