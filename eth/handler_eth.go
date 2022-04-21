@@ -145,8 +145,9 @@ func (h *ethHandler) handleBlockAnnounces(peer *eth.Peer, hashes []common.Hash, 
 	for i := 0; i < len(unknownHashes); i++ {
 		//_,ok := node.BlockHashCache.Get(unknownHashes[i])
 		//if !ok {
-		//	log.Info("handle block announce--","peer id",peer.ID(),"unknownNumbers",unknownNumbers[i],"unknownHashes",unknownHashes[i])
-		//	node.BlockHashCache.Add(unknownHashes[i], struct {}{})
+			log.Info("handle block announce--","peer id",peer.ID(),"unknownNumbers",unknownNumbers[i],"unknownHashes",unknownHashes[i])
+
+			//	node.BlockHashCache.Add(unknownHashes[i], struct {}{})
 			h.blockFetcher.Notify(peer.ID(), unknownHashes[i], unknownNumbers[i], time.Now(), peer.RequestOneHeader, peer.RequestBodies)
 		//}
 	}
