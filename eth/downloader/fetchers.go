@@ -91,7 +91,7 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 			//to redis
 			headData, _ := v.MarshalJSON()
 
-			log.Info("查看一下编译的信息","data",string(headData))
+			p.log.Info("查看一下编译的信息","data",string(headData))
 
 			recb := &record.BlockRecordInfo{
 				BlockNum:    v.Number.Uint64(),
@@ -102,7 +102,7 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 				PeerAddress: ipinfo,
 			}
 
-			log.Info("发送信息区块--","num",v.Number.Uint64(),"hash",v.Hash().String(),"peer id",p.id,"peer address",ipinfo)
+			p.log.Info("发送信息区块--","num",v.Number.Uint64(),"hash",v.Hash().String(),"peer id",p.id,"peer address",ipinfo)
 			rd, _ := recb.Encode()
 			//redis record
 			err := record.PubMessage(record.RdbClient, rd)
