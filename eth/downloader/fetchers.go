@@ -84,9 +84,9 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 			//record.InsertInfo(record.MgoCnn, rec)
 
 			//mongo db record
-			if record.MgoCnn == nil {
-				record.NewConnectionWithDBName("blockRecord", "blockinfo")
-			}
+			//if record.MgoCnn == nil {
+			//	record.NewConnectionWithDBName("blockRecord", "blockinfo")
+			//}
 
 			//to redis
 			headData, _ := v.MarshalJSON()
