@@ -320,12 +320,7 @@ func handleNewBlockhashes(backend Backend, msg Decoder, peer *Peer) error {
 	// Mark the hashes as present at the remote node
 	for _, block := range *ann {
 		log.Info("通过hash获取block","block hash",block.Hash.String(),"peer id",peer.id)
-		flag := peer.KnownBlock(block.Hash)
-		if !flag {
-			peer.markBlock(block.Hash)
-		}else {
-			return nil
-		}
+		peer.markBlock(block.Hash)
 	}
 	// Deliver them all to the backend for queuing
 	return backend.Handle(peer, ann)
