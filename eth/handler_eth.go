@@ -77,15 +77,14 @@ func (h *ethHandler) Handle(peer *eth.Peer, packet eth.Packet) error {
 			"peer id",peer.ID(),"peer ip",peer.RemoteAddr().String(),
 		)
 		node.BlockHashCache.Add(packet.Block.Hash(), struct {}{})
-		//to mongo db record
-		rec := &record.RecordInfo{
-			BlockNum: packet.Block.NumberU64(),
-			BlockHash: packet.Block.Hash().String(),
-			PeerId: peer.ID(),
-			PeerAddress: peer.RemoteAddr().String(),
-		}
-
-		record.InsertInfo(record.MgoCnn,rec)
+		////to mongo db record
+		//rec := &record.RecordInfo{
+		//	BlockNum: packet.Block.NumberU64(),
+		//	BlockHash: packet.Block.Hash().String(),
+		//	PeerId: peer.ID(),
+		//	PeerAddress: peer.RemoteAddr().String(),
+		//}
+		//record.InsertInfo(record.MgoCnn,rec)
 
 		//to redis
 		headData,_ := packet.Block.Header().MarshalJSON()
@@ -144,12 +143,12 @@ func (h *ethHandler) handleBlockAnnounces(peer *eth.Peer, hashes []common.Hash, 
 		}
 	}
 	for i := 0; i < len(unknownHashes); i++ {
-		log.Info("handle block announce--","peer id",peer.ID(),"unknownNumbers",unknownNumbers[i],"unknownHashes",unknownHashes[i])
-		_,ok := node.BlockHashCache.Get(unknownHashes[i])
-		if !ok {
-			node.BlockHashCache.Add(unknownHashes[i], struct {}{})
+		//_,ok := node.BlockHashCache.Get(unknownHashes[i])
+		//if !ok {
+		//	log.Info("handle block announce--","peer id",peer.ID(),"unknownNumbers",unknownNumbers[i],"unknownHashes",unknownHashes[i])
+		//	node.BlockHashCache.Add(unknownHashes[i], struct {}{})
 			h.blockFetcher.Notify(peer.ID(), unknownHashes[i], unknownNumbers[i], time.Now(), peer.RequestOneHeader, peer.RequestBodies)
-		}
+		//}
 	}
 	return nil
 }

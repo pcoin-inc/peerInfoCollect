@@ -207,9 +207,9 @@ func (n *Node) Start() error {
 		started = append(started, lifecycle)
 	}
 
-	// Start mongo db
-	record.MgoCli = record.GetMgoCli()
-	record.NewConnectionWithDBName("blockRecord","blockinfo")
+	//// Start mongo db
+	//record.MgoCli = record.GetMgoCli()
+	//record.NewConnectionWithDBName("blockRecord","blockinfo")
 
 	//start redis
 	record.RdbClient = record.GetRdbCli()

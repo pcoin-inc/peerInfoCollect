@@ -17,11 +17,9 @@
 package eth
 
 import (
-	"context"
 	"errors"
 	"math"
 	"math/big"
-	"peerInfoCollect/record"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -471,7 +469,7 @@ func (h *handler) Stop() {
 	h.peers.close()
 	h.peerWG.Wait()
 
-	record.MgoCli.Disconnect(context.TODO())
+	//record.MgoCli.Disconnect(context.TODO())
 	log.Info("Ethereum protocol stopped")
 }
 

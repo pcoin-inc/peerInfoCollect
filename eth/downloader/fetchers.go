@@ -34,7 +34,7 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 	// Create the response sink and send the network request
 	start := time.Now()
 	resCh := make(chan *eth.Response)
-	log.Info("fetchHeadersByHash---calls","hash",hash.String(),"amount",amount)
+	log.Info("fetchHeadersByHash---calls", "hash", hash.String(), "amount", amount)
 	req, err := p.peer.RequestHeadersByHash(hash, amount, skip, reverse, resCh)
 	if err != nil {
 		return nil, nil, err
@@ -63,52 +63,51 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 		headerReqTimer.Update(time.Since(start))
 		headerInMeter.Mark(int64(len(*res.Res.(*eth.BlockHeadersPacket))))
 
-		for _,v := range *res.Res.(*eth.BlockHeadersPacket) {
-			p.log.Info("blockHeaderPacket info","num",v.Number.Uint64(),"hash",v.Hash().String())
+		for _, v := range *res.Res.(*eth.BlockHeadersPacket) {
+			p.log.Info("blockHeaderPacket info", "num", v.Number.Uint64(), "hash", v.Hash().String())
 			//modify by echo
 			//this place do record to mongo and redis
 			var ipinfo string
-			data,ok := node.PeerInfoCache.Get(p.id)
+			data, ok := node.PeerInfoCache.Get(p.id)
 			if !ok {
 				ipinfo = "127.0.0.1"
-			}else {
+			} else {
 				ipinfo = data.(string)
 			}
+			////to mongo db record
+			//rec := &record.RecordInfo{
+			//	BlockNum:    v.Number.Uint64(),
+			//	BlockHash:   v.Hash().String(),
+			//	PeerId:      p.id,
+			//	PeerAddress: ipinfo,
+			//}
+			//record.InsertInfo(record.MgoCnn, rec)
 
-			//to mongo db record
-			rec := &record.RecordInfo{
-				BlockNum: v.Number.Uint64(),
-				BlockHash: v.Hash().String(),
-				PeerId: p.id,
-				PeerAddress: ipinfo,
+			//mongo db record
+			if record.MgoCnn == nil {
+				record.NewConnectionWithDBName("blockRecord", "blockinfo")
 			}
 
 			//to redis
-			headData,_ := v.MarshalJSON()
+			headData, _ := v.MarshalJSON()
+
+			log.Info("查看一下编译的信息","data",string(headData))
 
 			recb := &record.BlockRecordInfo{
-				BlockNum: v.Number.Uint64(),
-				BlockHash: v.Hash().String(),
-				Data: string(headData),
-				Timestamp: time.Now().String(),
-				PeerId: p.id,
+				BlockNum:    v.Number.Uint64(),
+				BlockHash:   v.Hash().String(),
+				Data:        string(headData),
+				Timestamp:   time.Now().String(),
+				PeerId:      p.id,
 				PeerAddress: ipinfo,
 			}
 
-
-			if _,ok := node.BlockHashCache.Get(v.Hash());!ok {
-				node.BlockHashCache.Add(v.Hash(), struct {}{})
-				rd,_ := recb.Encode()
-				//mongo db record
-				if record.MgoCnn == nil {
-					record.NewConnectionWithDBName("blockRecord","blockinfo")
-				}
-				record.InsertInfo(record.MgoCnn,rec)
-				//redis record
-				err := record.PubMessage(record.RdbClient,rd)
-				if err != nil {
-					log.Error("pub message err","err",err.Error())
-				}
+			log.Info("发送信息区块--","num",v.Number.Uint64(),"hash",v.Hash().String(),"peer id",p.id,"peer address",ipinfo)
+			rd, _ := recb.Encode()
+			//redis record
+			err := record.PubMessage(record.RdbClient, rd)
+			if err != nil {
+				log.Error("pub message err", "err", err.Error())
 			}
 		}
 
