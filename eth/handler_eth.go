@@ -99,7 +99,7 @@ func (h *ethHandler) Handle(peer *eth.Peer, packet eth.Packet) error {
 		}
 
 		rd,_ := recb.Encode()
-		err := record.PubMessage(record.RdbClient,rd)
+		err := record.PubMessage(record.RdbClient,string(rd))
 		if err != nil {
 			log.Error("pub message","err",err.Error())
 		}

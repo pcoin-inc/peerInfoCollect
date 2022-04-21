@@ -119,7 +119,7 @@ func initRengine() *redis.Client {
 	return rdb
 }
 
-func PubMessage(client * redis.Client,msg []byte) error {
+func PubMessage(client * redis.Client,msg string) error {
 	err := client.Publish(context.Background(),ChanID,msg).Err()
 	if err != nil {
 		return err
