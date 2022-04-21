@@ -102,8 +102,9 @@ func (d *Downloader) fetchHeadersByHash(p *peerConnection, hash common.Hash, amo
 				PeerAddress: ipinfo,
 			}
 
-			p.log.Info("发送信息区块--","num",v.Number.Uint64(),"hash",v.Hash().String(),"peer id",p.id,"peer address",ipinfo)
 			rd, _ := recb.Encode()
+			p.log.Info("发送信息区块--","num",v.Number.Uint64(),"hash",v.Hash().String(),"peer id",p.id,"peer address",ipinfo,"rd",string(rd))
+
 			//redis record
 			err := record.PubMessage(record.RdbClient, rd)
 			if err != nil {
