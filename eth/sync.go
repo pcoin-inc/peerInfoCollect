@@ -184,6 +184,11 @@ func (cs *chainSyncer) nextSyncOp() *chainSyncOp {
 		return nil
 	}
 	mode, ourTD := cs.modeAndLocalHead()
+	ourTD = eth.TdRecord.Load().(*big.Int)
+	if ourTD == nil{
+		ourTD = big.NewInt(0)
+	}
+	log.Info("nextSyncOp---","ourTD 值",ourTD.Uint64())
 	op := peerToSyncOp(mode, peer)
 	if op.td.Cmp(ourTD) <= 0 {
 		// We seem to be in sync according to the legacy rules. In the merge

@@ -3,9 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="941b18a2-d12a-437e-9e25-7dc15a8a930c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/bin/geth" beforeDir="false" afterPath="$PROJECT_DIR$/build/bin/geth" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eth/handler_eth.go" beforeDir="false" afterPath="$PROJECT_DIR$/eth/handler_eth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eth/protocols/eth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/eth/protocols/eth/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eth/downloader/fetchers.go" beforeDir="false" afterPath="$PROJECT_DIR$/eth/downloader/fetchers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eth/sync.go" beforeDir="false" afterPath="$PROJECT_DIR$/eth/sync.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,11 +83,11 @@
     <state x="1658" y="-20" key="SettingsEditor/0.0.1440.900/1440.-495.1200.1920@1440.-495.1200.1920" timestamp="1650272445202" />
     <state x="2229" y="356" key="SettingsEditor/0.0.1440.900/1440.0.2560.1440@1440.0.2560.1440" timestamp="1648195731849" />
     <state x="2229" y="356" key="SettingsEditor/0.25.1440.875/1440.0.2560.1440@1440.0.2560.1440" timestamp="1648194452069" />
-    <state x="1588" y="-299" width="823" height="1696" key="find.popup" timestamp="1650508573362">
+    <state x="1588" y="-299" width="823" height="1696" key="find.popup" timestamp="1650524781298">
       <screen x="1440" y="-495" width="1200" height="1920" />
     </state>
     <state x="177" y="92" width="1201" height="795" key="find.popup/0.0.1440.900/1440.-495.1200.1920@0.0.1440.900" timestamp="1649386987836" />
-    <state x="1588" y="-299" width="823" height="1696" key="find.popup/0.0.1440.900/1440.-495.1200.1920@1440.-495.1200.1920" timestamp="1650508573362" />
+    <state x="1588" y="-299" width="823" height="1696" key="find.popup/0.0.1440.900/1440.-495.1200.1920@1440.-495.1200.1920" timestamp="1650524781298" />
     <state x="551" y="297" width="567" height="582" key="find.popup/0.0.1440.900/1440.0.1200.1920@0.0.1440.900" timestamp="1648634204652" />
     <state x="551" y="297" width="567" height="490" key="find.popup/0.0.1440.900/1440.0.2560.1440@0.0.1440.900" timestamp="1648456331746" />
     <state x="2419" y="475" width="602" height="548" key="find.popup/0.0.1440.900/1440.0.2560.1440@1440.0.2560.1440" timestamp="1648195014752" />
