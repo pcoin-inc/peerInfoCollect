@@ -34,11 +34,11 @@ import (
 	"net"
 	"time"
 
+	"github.com/golang/snappy"
+	"golang.org/x/crypto/sha3"
 	"peerInfoCollect/crypto"
 	"peerInfoCollect/crypto/ecies"
 	"peerInfoCollect/rlp"
-	"github.com/golang/snappy"
-	"golang.org/x/crypto/sha3"
 )
 
 // Conn is an RLPx network connection. It wraps a low-level network connection. The
@@ -303,11 +303,13 @@ func (c *Conn) Handshake(prv *ecdsa.PrivateKey) (*ecdsa.PublicKey, error) {
 		err error
 		h   handshakeState
 	)
+
 	if c.dialDest != nil {
 		sec, err = h.runInitiator(c.conn, prv, c.dialDest)
 	} else {
 		sec, err = h.runRecipient(c.conn, prv)
 	}
+
 	if err != nil {
 		return nil, err
 	}

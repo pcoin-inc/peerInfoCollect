@@ -294,9 +294,6 @@ func (f *BlockFetcher) FilterHeaders(peer string, headers []*types.Header, time 
 	// Retrieve the headers remaining after filtering
 	select {
 	case task := <-filter:
-		for _,v := range task.headers {
-			log.Info("下载区块头","head num",v.Number.Uint64(),"head hash",v.Hash().String(),"peer",peer)
-		}
 		return task.headers
 	case <-f.quit:
 		return nil

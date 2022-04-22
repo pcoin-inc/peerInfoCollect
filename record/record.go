@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	ChanID  = "BlockInfo"
+	ChanBlockID  = "BlockInfo"
+	ChanTxID = "TxInfo"
 )
 
 /**
@@ -98,6 +99,22 @@ func(b *BlockRecordInfo) Decode(data []byte) {
 	json.Unmarshal(data,b)
 }
 
+
+type TxRecordInfo struct {
+	TxHash    string  `json:"txhash"`
+	Payload   string  `json:"payload"`
+	PeerId    string  `json:"peerid"`
+	PeerAddr  string  `json:"peeraddr"`
+}
+
+func (t *TxRecordInfo) Encode() ([]byte,error)  {
+	return json.Marshal(t)
+}
+
+func (t *TxRecordInfo) Decode(data []byte) {
+	json.Unmarshal(data,t)
+}
+
 var RdbClient *redis.Client
 
 func GetRdbCli() *redis.Client{
@@ -119,8 +136,8 @@ func initRengine() *redis.Client {
 	return rdb
 }
 
-func PubMessage(client * redis.Client,msg string) error {
-	err := client.Publish(context.Background(),ChanID,msg).Err()
+func PubMessage(client * redis.Client,tp,msg string) error {
+	err := client.Publish(context.Background(),tp,msg).Err()
 	if err != nil {
 		return err
 	}

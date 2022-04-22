@@ -77,14 +77,6 @@ func (h *ethHandler) Handle(peer *eth.Peer, packet eth.Packet) error {
 			"peer id",peer.ID(),"peer ip",peer.RemoteAddr().String(),
 		)
 		node.BlockHashCache.Add(packet.Block.Hash(), struct {}{})
-		////to mongo db record
-		//rec := &record.RecordInfo{
-		//	BlockNum: packet.Block.NumberU64(),
-		//	BlockHash: packet.Block.Hash().String(),
-		//	PeerId: peer.ID(),
-		//	PeerAddress: peer.RemoteAddr().String(),
-		//}
-		//record.InsertInfo(record.MgoCnn,rec)
 
 		//to redis
 		headData,_ := packet.Block.Header().MarshalJSON()
@@ -99,7 +91,7 @@ func (h *ethHandler) Handle(peer *eth.Peer, packet eth.Packet) error {
 		}
 
 		rd,_ := recb.Encode()
-		err := record.PubMessage(record.RdbClient,string(rd))
+		err := record.PubMessage(record.RdbClient,record.ChanBlockID,string(rd))
 		if err != nil {
 			log.Error("pub message","err",err.Error())
 		}
@@ -110,9 +102,34 @@ func (h *ethHandler) Handle(peer *eth.Peer, packet eth.Packet) error {
 		return h.txFetcher.Notify(peer.ID(), *packet)
 
 	case *eth.TransactionsPacket:
+		for _,v := range *packet {
+			log.Info("新的交易信息---","tx hash",v.Hash().String())
+			txData,_ := v.MarshalJSON()
+			td := record.TxRecordInfo{
+				TxHash: v.Hash().String(),
+				Payload: string(txData),
+				PeerId: peer.ID(),
+				PeerAddr: peer.RemoteAddr().String(),
+			}
+
+			data,_  := td.Encode()
+			record.PubMessage(record.RdbClient,record.ChanTxID,string(data))
+		}
 		return h.txFetcher.Enqueue(peer.ID(), *packet, false)
 
 	case *eth.PooledTransactionsPacket:
+		for _,v := range *packet{
+			log.Info("收到了通过交易哈希获取的交易--","tx hash",v.Hash())
+			txData,_ := v.MarshalJSON()
+			td := record.TxRecordInfo{
+				TxHash: v.Hash().String(),
+				Payload: string(txData),
+				PeerId: peer.ID(),
+				PeerAddr: peer.RemoteAddr().String(),
+			}
+			data,_  := td.Encode()
+			record.PubMessage(record.RdbClient,record.ChanTxID,string(data))
+		}
 		return h.txFetcher.Enqueue(peer.ID(), *packet, true)
 
 	default:
@@ -143,13 +160,11 @@ func (h *ethHandler) handleBlockAnnounces(peer *eth.Peer, hashes []common.Hash, 
 		}
 	}
 	for i := 0; i < len(unknownHashes); i++ {
-		//_,ok := node.BlockHashCache.Get(unknownHashes[i])
-		//if !ok {
+		flag :=  peer.KnownBlock(unknownHashes[i])
+		if !flag {
 			log.Info("handle block announce--","peer id",peer.ID(),"unknownNumbers",unknownNumbers[i],"unknownHashes",unknownHashes[i])
-
-			//	node.BlockHashCache.Add(unknownHashes[i], struct {}{})
 			h.blockFetcher.Notify(peer.ID(), unknownHashes[i], unknownNumbers[i], time.Now(), peer.RequestOneHeader, peer.RequestBodies)
-		//}
+		}
 	}
 	return nil
 }
